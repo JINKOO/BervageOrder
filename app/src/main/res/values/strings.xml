@@ -1,3 +1,7 @@
 <resources>
-    <string name="app_name">BervageOrder</string>
+    <string name="app_name">BeverageOrder</string>
+
+    <!-- Intro -->
+    <string name="title_greeting_start_order">반가워요\n주문을 시작할게요</string>
+    <string name="button_next">다음</string>
 </resources>
