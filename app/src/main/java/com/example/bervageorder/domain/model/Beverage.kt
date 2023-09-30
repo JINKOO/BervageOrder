@@ -7,4 +7,8 @@ data class Beverage(
     val temperature: TemperatureType,
     val price: String,
     val isCaffeine: Boolean
-)
+) {
+    companion object {
+        
+    }
+}
