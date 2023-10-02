@@ -1,7 +1,6 @@
 package com.example.bervageorder.data.entity
 
-
-data class BeverageEntity(
+data class MenuEntity(
     val type: MenuType? = null,
     val name: String? = null,
     val temperature: TemperatureType? = null,

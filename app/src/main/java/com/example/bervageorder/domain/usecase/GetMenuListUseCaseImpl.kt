@@ -1,14 +1,14 @@
 package com.example.bervageorder.domain.usecase
 
-import com.example.bervageorder.data.repository.BeverageRepository
-import com.example.bervageorder.domain.model.Beverage
+import com.example.bervageorder.data.repository.MenuRepository
+import com.example.bervageorder.domain.model.Menu
 import javax.inject.Inject
 
 class GetMenuListUseCaseImpl @Inject constructor(
-    private val beverageRepository: BeverageRepository
+    private val menuRepository: MenuRepository
 ) : GetMenuListUseCase {
 
-    override suspend fun getMenuList(): Result<List<Beverage>> {
-        return beverageRepository.getMenuList()
+    override suspend fun getMenuList(): Result<List<Menu>> {
+        return menuRepository.getMenuList()
     }
 }

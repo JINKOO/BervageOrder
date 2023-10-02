@@ -1,7 +1,7 @@
 package com.example.bervageorder.data.di
 
-import com.example.bervageorder.data.repository.BeverageRepository
-import com.example.bervageorder.domain.repository.BeverageRepositoryImpl
+import com.example.bervageorder.data.repository.MenuRepository
+import com.example.bervageorder.domain.repository.MenuRepositoryImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -12,7 +12,7 @@ import dagger.hilt.components.SingletonComponent
 abstract class RepositoryModule {
 
     @Binds
-    abstract fun bindBeverageRepository(
-        beverageRepositoryImpl: BeverageRepositoryImpl
-    ): BeverageRepository
+    abstract fun bindMenuRepository(
+        menuRepositoryImpl: MenuRepositoryImpl
+    ): MenuRepository
 }

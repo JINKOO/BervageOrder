@@ -1,6 +1,6 @@
 package com.example.bervageorder.presentation.menulist
 
-import com.example.bervageorder.domain.model.Beverage
+import com.example.bervageorder.domain.model.Menu
 
 object MenuList {
 
@@ -15,7 +15,7 @@ object MenuList {
         val isLoading: Boolean = false,
 
         // data
-        val menuList: List<Beverage> = emptyList()
+        val menuList: List<Menu> = emptyList()
     )
 
     // UiEvent (Compose -> ViewModel)

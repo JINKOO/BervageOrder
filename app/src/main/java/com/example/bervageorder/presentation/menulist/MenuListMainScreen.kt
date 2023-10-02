@@ -16,7 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.bervageorder.R
-import com.example.bervageorder.domain.model.Beverage
+import com.example.bervageorder.domain.model.Menu
 import com.example.bervageorder.presentation.common.BeverageOrderTopAppBar
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -46,14 +46,14 @@ fun MenuListMainScreen(
 @Composable
 private fun MenuList(
     modifier: Modifier = Modifier,
-    menuList: List<Beverage> = emptyList()
+    menuList: List<Menu> = emptyList()
 ) {
     LazyColumn(
         modifier = modifier
     ) {
         items(menuList) { beverage ->
             MenuItem(
-                beverage = beverage
+                menu = beverage
             )
         }
     }
@@ -62,7 +62,7 @@ private fun MenuList(
 @Composable
 private fun MenuItem(
     modifier: Modifier = Modifier,
-    beverage: Beverage
+    menu: Menu
 ) {
     Column(
         modifier = modifier
@@ -70,11 +70,11 @@ private fun MenuItem(
             .fillMaxWidth()
     ) {
         Text(
-            text = beverage.name,
+            text = menu.name,
             style = MaterialTheme.typography.bodyLarge
         )
         Text(
-            text = beverage.price,
+            text = menu.price,
             style = MaterialTheme.typography.bodyMedium
         )
     }
