@@ -1,28 +1,54 @@
 package com.example.bervageorder.domain.repository
 
-import com.example.bervageorder.data.repository.MenuRepository
 import com.example.bervageorder.data.entity.MenuEntity
 import com.example.bervageorder.data.entity.MenuType
 import com.example.bervageorder.data.entity.TemperatureType
+import com.example.bervageorder.data.repository.MenuRepository
 import com.example.bervageorder.domain.model.Menu
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import timber.log.Timber
+import java.util.UUID
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class MenuRepositoryImpl @Inject constructor() : MenuRepository {
 
+    override val menuList: MutableList<Menu> = mutableListOf()
+
     override suspend fun getMenuList(): Result<List<Menu>> =
-        runCatching { getFakeMenuList().map { Menu(it) } }
-            .onSuccess { it }
-            .onFailure {
-                Timber.w("getMenuList() ERROR :: ${it.message}")
+        // TODO 질문 :: Repository에서 Entity -> Model로 변경 방식이 맞는지? runCatching의 올바르게 사용했는지..??
+        runCatching {
+            Timber.d("getMenuList() START :: ${menuList.size}")
+            getFakeMenuList().map { Menu(it) }.also {
+                Timber.d("getMenuList() END :: ${it.size}")
             }
+        }.onSuccess {
+            Timber.d("getMenuList() SUCCESS :: ${menuList.size}")
+            it.forEach { menu -> menuList.add(menu) }.also {
+                Timber.d("getMenuList() END :: ${menuList.size} / ${menuList}")
+            }
+        }.onFailure {
+            Timber.w("getMenuList() ERROR :: ${it.message}")
+        }
+
+    override suspend fun getMenuById(menuId: String): Result<Menu> =
+        runCatching {
+            Timber.d("getMenuById() menuList :: ${menuList}")
+            // TODO 질문 :: find는 해당 조건에 없다면 null을 반환하는데, 이때, Null 처리를 어떻게 하면 되는지? Null인 경우, 빈 객체로 정의?
+            menuList.find { it.id == menuId } ?: Menu()
+        }.onSuccess {
+            Timber.d("getMenuById() SUCCESS :: ${it}")
+        }.onFailure {
+            Timber.w("getMenuById() ERROR :: ${it.message}")
+        }
 
     private suspend fun getFakeMenuList(): List<MenuEntity> =
         withContext(Dispatchers.Default) {
             mutableListOf(
                 MenuEntity(
+                    id = createMenuId(),
                     type = MenuType.COFFEE,
                     name = "아메리카노",
                     temperature = TemperatureType.BOTH,
@@ -30,6 +56,7 @@ class MenuRepositoryImpl @Inject constructor() : MenuRepository {
                     isCaffeine = true
                 ),
                 MenuEntity(
+                    id = createMenuId(),
                     type = MenuType.COFFEE,
                     name = "카페라떼",
                     temperature = TemperatureType.BOTH,
@@ -37,6 +64,7 @@ class MenuRepositoryImpl @Inject constructor() : MenuRepository {
                     isCaffeine = true
                 ),
                 MenuEntity(
+                    id = createMenuId(),
                     type = MenuType.COFFEE,
                     name = "카푸치노",
                     temperature = TemperatureType.BOTH,
@@ -44,6 +72,7 @@ class MenuRepositoryImpl @Inject constructor() : MenuRepository {
                     isCaffeine = true
                 ),
                 MenuEntity(
+                    id = createMenuId(),
                     type = MenuType.ADE,
                     name = "오렌지에이드",
                     temperature = TemperatureType.ICE,
@@ -51,6 +80,7 @@ class MenuRepositoryImpl @Inject constructor() : MenuRepository {
                     isCaffeine = false
                 ),
                 MenuEntity(
+                    id = createMenuId(),
                     type = MenuType.ADE,
                     name = "망고에이드",
                     temperature = TemperatureType.ICE,
@@ -58,6 +88,7 @@ class MenuRepositoryImpl @Inject constructor() : MenuRepository {
                     isCaffeine = false
                 ),
                 MenuEntity(
+                    id = createMenuId(),
                     type = MenuType.TEA,
                     name = "얼그레이티",
                     temperature = TemperatureType.HOT,
@@ -65,6 +96,7 @@ class MenuRepositoryImpl @Inject constructor() : MenuRepository {
                     isCaffeine = true
                 ),
                 MenuEntity(
+                    id = createMenuId(),
                     type = MenuType.ADE,
                     name = "페퍼민트티",
                     temperature = TemperatureType.HOT,
@@ -72,6 +104,7 @@ class MenuRepositoryImpl @Inject constructor() : MenuRepository {
                     isCaffeine = false
                 ),
                 MenuEntity(
+                    id = createMenuId(),
                     type = MenuType.DESSERT,
                     name = "치즈케이크",
                     temperature = TemperatureType.NONE,
@@ -79,6 +112,7 @@ class MenuRepositoryImpl @Inject constructor() : MenuRepository {
                     isCaffeine = false
                 ),
                 MenuEntity(
+                    id = createMenuId(),
                     type = MenuType.DESSERT,
                     name = "초코케이크",
                     temperature = TemperatureType.NONE,
@@ -86,6 +120,7 @@ class MenuRepositoryImpl @Inject constructor() : MenuRepository {
                     isCaffeine = false
                 ),
                 MenuEntity(
+                    id = createMenuId(),
                     type = MenuType.DESSERT,
                     name = "마들렌",
                     temperature = TemperatureType.NONE,
@@ -93,6 +128,7 @@ class MenuRepositoryImpl @Inject constructor() : MenuRepository {
                     isCaffeine = false
                 ),
                 MenuEntity(
+                    id = createMenuId(),
                     type = MenuType.DESSERT,
                     name = "휘낭시에",
                     temperature = TemperatureType.NONE,
@@ -101,4 +137,6 @@ class MenuRepositoryImpl @Inject constructor() : MenuRepository {
                 )
             )
         }
+
+    private fun createMenuId(): String = UUID.randomUUID().toString()
 }

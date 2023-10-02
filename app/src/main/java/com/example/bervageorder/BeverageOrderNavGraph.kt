@@ -6,12 +6,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
+import com.example.bervageorder.BeverageOrderDestinationArg.MENU_ID_ARG
+import com.example.bervageorder.BeverageOrderScreen.ORDER_DETAIL_SCREEN
 import com.example.bervageorder.presentation.intro.IntroMainScreen
 import com.example.bervageorder.presentation.menulist.MenuListMainScreen
 import com.example.bervageorder.presentation.menulist.MenuListViewModel
+import com.example.bervageorder.presentation.orderdetail.OrderMainScreen
+import com.example.bervageorder.presentation.orderdetail.OrderViewModel
 
 
 @Composable
@@ -39,6 +45,24 @@ fun BeverageOrderNavGraph(
         ) {
             val viewModel = hiltViewModel<MenuListViewModel>()
             MenuListMainScreen(
+                viewModel = viewModel,
+                navigateToOrderDetail = {
+                    navController.navigate(
+                        route = "$ORDER_DETAIL_SCREEN/$it"
+                    )
+                },
+                navigateUp = { navController.navigateUp() }
+            )
+        }
+
+        composable(
+            route = BeverageOrderDestination.ORDER_DETAIL_ROUTE,
+            arguments = listOf(
+                navArgument(MENU_ID_ARG) { type = NavType.StringType }
+            )
+        ) {
+            val viewModel = hiltViewModel<OrderViewModel>()
+            OrderMainScreen(
                 viewModel = viewModel,
                 navigateUp = { navController.navigateUp() }
             )

@@ -1,6 +1,7 @@
 package com.example.bervageorder.data.entity
 
 data class MenuEntity(
+    val id: String? = null,
     val type: MenuType? = null,
     val name: String? = null,
     val temperature: TemperatureType? = null,

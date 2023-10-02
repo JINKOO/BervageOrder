@@ -2,6 +2,7 @@ package com.example.bervageorder.presentation.menulist
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -28,6 +29,7 @@ import com.example.bervageorder.presentation.common.BeverageOrderTopAppBar
 fun MenuListMainScreen(
     modifier: Modifier = Modifier,
     viewModel: MenuListViewModel,
+    navigateToOrderDetail: (String) -> Unit,
     navigateUp: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -42,7 +44,8 @@ fun MenuListMainScreen(
     ) { paddingValues ->
         MenuList(
             modifier = Modifier.padding(paddingValues = paddingValues),
-            menuGrouped = uiState.menuMap
+            menuGrouped = uiState.menuMap,
+            navigateToOrderDetail = navigateToOrderDetail
         )
     }
 }
@@ -51,7 +54,8 @@ fun MenuListMainScreen(
 @Composable
 private fun MenuList(
     modifier: Modifier = Modifier,
-    menuGrouped: Map<MenuType, List<Menu>> = emptyMap()
+    menuGrouped: Map<MenuType, List<Menu>> = emptyMap(),
+    navigateToOrderDetail: (String) -> Unit
 ) {
     LazyColumn(
         modifier = modifier
@@ -66,7 +70,8 @@ private fun MenuList(
 
             items(menuListByMenuType) { menu ->
                 MenuItem(
-                    menu = menu
+                    menu = menu,
+                    navigateToOrderDetail =  { navigateToOrderDetail(menu.id) }
                 )
             }
         }
@@ -94,12 +99,14 @@ private fun MenuHeader(
 @Composable
 private fun MenuItem(
     modifier: Modifier = Modifier,
-    menu: Menu
+    menu: Menu,
+    navigateToOrderDetail: () -> Unit
 ) {
     Column(
         modifier = modifier
             .padding(16.dp)
             .fillMaxWidth()
+            .clickable { navigateToOrderDetail() }
     ) {
         Text(
             text = menu.name,
