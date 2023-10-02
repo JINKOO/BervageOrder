@@ -8,7 +8,4 @@ data class Beverage(
     val price: String,
     val isCaffeine: Boolean
 ) {
-    companion object {
-        
-    }
 }
