@@ -7,4 +7,7 @@
 
     <!-- MenuList -->
     <string name="title_menu_list_screen">메뉴</string>
+
+    <!-- Order -->
+    <string name="title_order_screen">주문 상세</string>
 </resources>
