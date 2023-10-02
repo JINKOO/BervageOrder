@@ -76,6 +76,9 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
 
+    // compose lifecycle
+    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.6.2")
+
     // Timber Logger
     implementation("com.jakewharton.timber:timber:5.0.1")
 
@@ -85,4 +88,5 @@ dependencies {
     // hilt
     implementation("com.google.dagger:hilt-android:$hiltVersion")
     kapt("com.google.dagger:hilt-android-compiler:$hiltVersion")
+    implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
 }

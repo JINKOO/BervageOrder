@@ -13,11 +13,13 @@ enum class MenuType {
     COFFEE,
     ADE,
     TEA,
-    DESSERT
+    DESSERT,
+    NONE
 }
 
 enum class TemperatureType {
     ICE,
     HOT,
+    BOTH,
     NONE
 }
