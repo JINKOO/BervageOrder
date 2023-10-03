@@ -5,6 +5,7 @@ import com.example.bervageorder.data.entity.MenuType
 import com.example.bervageorder.data.entity.TemperatureType
 import com.example.bervageorder.data.repository.MenuRepository
 import com.example.bervageorder.domain.model.Menu
+import com.example.bervageorder.domain.model.OrderMenu
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import timber.log.Timber
@@ -16,6 +17,8 @@ import javax.inject.Singleton
 class MenuRepositoryImpl @Inject constructor() : MenuRepository {
 
     override val menuList: MutableList<Menu> = mutableListOf()
+
+    override val orderMenuOptionList: MutableList<String> = mutableListOf()
 
     override suspend fun getMenuList(): Result<List<Menu>> =
         // TODO 질문 :: Repository에서 Entity -> Model로 변경 방식이 맞는지? runCatching의 올바르게 사용했는지..??
@@ -43,6 +46,8 @@ class MenuRepositoryImpl @Inject constructor() : MenuRepository {
         }.onFailure {
             Timber.w("getMenuById() ERROR :: ${it.message}")
         }
+
+
 
     private suspend fun getFakeMenuList(): List<MenuEntity> =
         withContext(Dispatchers.Default) {
@@ -97,11 +102,11 @@ class MenuRepositoryImpl @Inject constructor() : MenuRepository {
                 ),
                 MenuEntity(
                     id = createMenuId(),
-                    type = MenuType.ADE,
+                    type = MenuType.TEA,
                     name = "페퍼민트티",
                     temperature = TemperatureType.HOT,
                     price = "2500",
-                    isCaffeine = false
+                    isCaffeine = true
                 ),
                 MenuEntity(
                     id = createMenuId(),
@@ -136,6 +141,27 @@ class MenuRepositoryImpl @Inject constructor() : MenuRepository {
                     isCaffeine = false
                 )
             )
+        }
+
+    override suspend fun setOptionList(menuId: String, optionList: List<String>) =
+        withContext(Dispatchers.IO) {
+            optionList.forEach {
+                orderMenuOptionList.add(it)
+            }.also {
+                Timber.i("setOptionList() :: ${orderMenuOptionList.size}")
+            }
+        }
+
+    override suspend fun getOrderMenu(menuId: String): Result<OrderMenu> =
+        runCatching {
+            OrderMenu(
+                menu = getMenuById(menuId = menuId).getOrNull() ?: Menu(),
+                optionList = orderMenuOptionList
+            )
+        }.onSuccess {
+            Timber.i("getOrderMenu() result :: $it")
+        }.onFailure {
+            Timber.w("getOrderMenu() ERROR :: ${it.message}")
         }
 
     private fun createMenuId(): String = UUID.randomUUID().toString()

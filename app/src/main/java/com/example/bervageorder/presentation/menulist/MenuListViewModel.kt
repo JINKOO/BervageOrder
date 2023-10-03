@@ -23,11 +23,6 @@ class MenuListViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(MenuList.MenuListUiState())
     val uiState = _uiState.asStateFlow()
 
-    private val coffeeList = mutableListOf<Menu>()
-    private val adeList = mutableListOf<Menu>()
-    private val teaList = mutableListOf<Menu>()
-    private val dessertList = mutableListOf<Menu>()
-
     init {
         getMenuList()
     }

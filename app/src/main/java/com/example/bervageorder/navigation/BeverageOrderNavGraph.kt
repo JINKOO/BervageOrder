@@ -1,4 +1,4 @@
-package com.example.bervageorder
+package com.example.bervageorder.navigation
 
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
@@ -11,13 +11,16 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.example.bervageorder.BeverageOrderDestinationArg.MENU_ID_ARG
-import com.example.bervageorder.BeverageOrderScreen.ORDER_DETAIL_SCREEN
+import com.example.bervageorder.navigation.BeverageOrderDestinationArg.MENU_ID_ARG
+import com.example.bervageorder.navigation.BeverageOrderScreen.MENU_DETAIL_SCREEN
+import com.example.bervageorder.navigation.BeverageOrderScreen.MENU_ORDER_SCREEN
 import com.example.bervageorder.presentation.intro.IntroMainScreen
 import com.example.bervageorder.presentation.menulist.MenuListMainScreen
 import com.example.bervageorder.presentation.menulist.MenuListViewModel
-import com.example.bervageorder.presentation.orderdetail.OrderMainScreen
-import com.example.bervageorder.presentation.orderdetail.OrderViewModel
+import com.example.bervageorder.presentation.menudetail.MenuDetailMainScreen
+import com.example.bervageorder.presentation.menudetail.MenuDetailViewModel
+import com.example.bervageorder.presentation.order.OrderMainScreen
+import com.example.bervageorder.presentation.order.OrderViewModel
 
 
 @Composable
@@ -48,7 +51,7 @@ fun BeverageOrderNavGraph(
                 viewModel = viewModel,
                 navigateToOrderDetail = {
                     navController.navigate(
-                        route = "$ORDER_DETAIL_SCREEN/$it"
+                        route = "$MENU_DETAIL_SCREEN/$it"
                     )
                 },
                 navigateUp = { navController.navigateUp() }
@@ -56,15 +59,30 @@ fun BeverageOrderNavGraph(
         }
 
         composable(
-            route = BeverageOrderDestination.ORDER_DETAIL_ROUTE,
+            route = BeverageOrderDestination.MENU_DETAIL_ROUTE,
             arguments = listOf(
                 navArgument(MENU_ID_ARG) { type = NavType.StringType }
+            )
+        ) {
+            val viewModel = hiltViewModel<MenuDetailViewModel>()
+            MenuDetailMainScreen(
+                viewModel = viewModel,
+                navigateUp = { navController.navigateUp() },
+                navigateToOrder = { navController.navigate(route = "$MENU_ORDER_SCREEN/$it")}
+            )
+        }
+
+        composable(
+            route = BeverageOrderDestination.MENU_ORDER_ROUTE,
+            arguments = listOf(
+                navArgument(MENU_ID_ARG) { type = NavType.StringType}
             )
         ) {
             val viewModel = hiltViewModel<OrderViewModel>()
             OrderMainScreen(
                 viewModel = viewModel,
-                navigateUp = { navController.navigateUp() }
+                navigateUp = { navController.navigateUp() },
+                navigateToIntro = {}
             )
         }
     }

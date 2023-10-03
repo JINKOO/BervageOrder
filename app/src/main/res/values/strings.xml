@@ -8,6 +8,20 @@
     <!-- MenuList -->
     <string name="title_menu_list_screen">메뉴</string>
 
-    <!-- Order -->
-    <string name="title_order_screen">주문 상세</string>
+    <!-- Menu Detail -->
+    <string name="title_order_screen">메뉴 옵션 선택</string>
+    <string name="title_default_option">기본</string>
+    <string name="title_decaffeine_option">디카페인</string>
+    <string name="title_ice_option">얼음</string>
+    <string name="button_hot">HOT</string>
+    <string name="button_ice">ICE</string>
+    <string name="button_caffeine">카페인</string>
+    <string name="button_decaffeine">디카페인</string>
+    <string name="button_ice_small">적게</string>
+    <string name="button_ice_medium">보통</string>
+    <string name="button_ice_large">많이</string>
+
+    <!-- Order Detail -->
+    <string name="titile_order_screen">주문 상세</string>
+    <string name="button_close">닫기</string>
 </resources>
