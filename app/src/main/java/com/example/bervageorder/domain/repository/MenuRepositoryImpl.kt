@@ -9,6 +9,7 @@ import com.example.bervageorder.domain.model.OrderMenu
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import timber.log.Timber
+import java.lang.NullPointerException
 import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -36,18 +37,15 @@ class MenuRepositoryImpl @Inject constructor() : MenuRepository {
             Timber.w("getMenuList() ERROR :: ${it.message}")
         }
 
-    override suspend fun getMenuById(menuId: String): Result<Menu> =
-        runCatching {
-            Timber.d("getMenuById() menuList :: ${menuList}")
-            // TODO 질문 :: find는 해당 조건에 없다면 null을 반환하는데, 이때, Null 처리를 어떻게 하면 되는지? Null인 경우, 빈 객체로 정의?
-            menuList.find { it.id == menuId } ?: Menu()
-        }.onSuccess {
-            Timber.d("getMenuById() SUCCESS :: ${it}")
-        }.onFailure {
-            Timber.w("getMenuById() ERROR :: ${it.message}")
-        }
-
-
+    override suspend fun getMenuById(menuId: String): Result<Menu?> = runCatching {
+        Timber.d("getMenuById() menuList :: ${menuList}")
+        // TODO 질문 :: find는 해당 조건에 없다면 null을 반환하는데, 이때, Null 처리를 어떻게 하면 되는지? Null인 경우, 빈 객체로 정의?
+        menuList.find { it.id == menuId } // ?: Menu()
+    }.onSuccess {
+        Timber.d("getMenuById() SUCCESS :: ${it}")
+    }.onFailure {
+        Timber.w("getMenuById() ERROR :: ${it.message}")
+    }
 
     private suspend fun getFakeMenuList(): List<MenuEntity> =
         withContext(Dispatchers.Default) {
@@ -143,7 +141,16 @@ class MenuRepositoryImpl @Inject constructor() : MenuRepository {
             )
         }
 
-    override suspend fun setOptionList(menuId: String, optionList: List<String>) =
+    override suspend fun setOptionList(menuId: String, optionList: List<String>): Result<Boolean> {
+        return try {
+            postOptionList(optionList)
+            Result.success(true)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    private suspend fun postOptionList(optionList: List<String>) {
         withContext(Dispatchers.IO) {
             optionList.forEach {
                 orderMenuOptionList.add(it)
@@ -151,18 +158,20 @@ class MenuRepositoryImpl @Inject constructor() : MenuRepository {
                 Timber.i("setOptionList() :: ${orderMenuOptionList.size}")
             }
         }
+    }
 
-    override suspend fun getOrderMenu(menuId: String): Result<OrderMenu> =
-        runCatching {
-            OrderMenu(
-                menu = getMenuById(menuId = menuId).getOrNull() ?: Menu(),
-                optionList = orderMenuOptionList
-            )
-        }.onSuccess {
-            Timber.i("getOrderMenu() result :: $it")
-        }.onFailure {
-            Timber.w("getOrderMenu() ERROR :: ${it.message}")
-        }
+    // TODO 질문 :: runCatching 올바른 사용법
+    override suspend fun getOrderMenu(menuId: String): Result<OrderMenu> = runCatching {
+        val menu =
+            getMenuById(menuId = menuId).getOrNull() ?: throw NullPointerException("Menu Is Null!!")
+        OrderMenu(menu = menu, optionList = orderMenuOptionList)
+    }.onSuccess {
+        Timber.i("getOrderMenu() Success :: ${it} ")
+        Result.success(it)
+    }.onFailure {
+        Timber.w("getOrderMenu() ERROR :: ${it.message}")
+        Result.failure<Exception>(it)
+    }
 
     private fun createMenuId(): String = UUID.randomUUID().toString()
 }

@@ -2,6 +2,7 @@ package com.example.bervageorder.presentation.order
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -12,6 +13,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -25,12 +27,10 @@ import com.example.bervageorder.presentation.common.BeverageOrderTopAppBar
 fun OrderMainScreen(
     modifier: Modifier = Modifier,
     viewModel: OrderViewModel,
-    navigateUp:() -> Unit,
+    navigateUp: () -> Unit,
     navigateToIntro: () -> Unit
 ) {
-
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-
     Scaffold(
         topBar = {
             BeverageOrderTopAppBar(
@@ -42,8 +42,8 @@ fun OrderMainScreen(
         OrderContent(
             modifier = modifier.padding(paddingValues),
             menu = uiState.menu,
-            optionList = uiState.optionList,
-            navigateToIntro = {}
+            optionList = uiState.optionListString,
+            navigateToIntro = navigateToIntro
         )
     }
 }
@@ -52,23 +52,34 @@ fun OrderMainScreen(
 private fun OrderContent(
     modifier: Modifier = Modifier,
     menu: Menu?,
-    optionList: List<String>,
+    optionList: String,
     navigateToIntro: () -> Unit
 ) {
     if (menu != null) {
         Column(
-            modifier = modifier.fillMaxSize(),
+            modifier = modifier
+                .padding(horizontal = 16.dp, vertical = 32.dp)
+                .fillMaxSize(),
             verticalArrangement = Arrangement.SpaceBetween
         ) {
-
-            Column(
-                modifier = modifier,
-                verticalArrangement = Arrangement.spacedBy(8.dp)
+            Row(
+                modifier = modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(
-                    text = menu.name,
-                    style = MaterialTheme.typography.bodyLarge
-                )
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Text(
+                        text = menu.name,
+                        style = MaterialTheme.typography.bodyLarge
+                    )
+                    Text(
+                        text = optionList,
+                        style = MaterialTheme.typography.bodyLarge
+                    )
+                }
+
                 Text(
                     text = menu.price,
                     style = MaterialTheme.typography.headlineMedium
@@ -76,13 +87,11 @@ private fun OrderContent(
             }
 
             Button(
-                modifier = Modifier
-                    .padding(horizontal = 16.dp, vertical = 32.dp)
-                    .fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth(),
                 onClick = { navigateToIntro() }
             ) {
                 Text(
-                    text = stringResource(R.string.button_next),
+                    text = stringResource(R.string.button_close),
                     style = MaterialTheme.typography.bodyLarge
                 )
             }

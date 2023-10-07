@@ -6,7 +6,7 @@ import javax.inject.Inject
 class SetOptionListUseCaseImpl @Inject constructor(
     private val repository: MenuRepository
 ) : SetOptionListUseCase {
-    override suspend fun setOptionList(menuId: String, optionList: List<String>) {
-        repository.setOptionList(menuId = menuId, optionList = optionList)
+    override suspend fun setOptionList(menuId: String, optionList: List<String>): Result<Boolean> {
+        return repository.setOptionList(menuId = menuId, optionList = optionList)
     }
 }

@@ -1,5 +1,6 @@
 package com.example.bervageorder.presentation.menudetail
 
+import android.widget.Toast
 import androidx.annotation.ColorRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -17,6 +18,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -41,6 +43,7 @@ fun MenuDetailMainScreen(
     navigateToOrder: (String) -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val context = LocalContext.current
     Scaffold(
         topBar = {
             BeverageOrderTopAppBar(
@@ -59,11 +62,19 @@ fun MenuDetailMainScreen(
             menu = uiState.menu,
             isShowIceQuantityOption = uiState.isShowIceQuantityOption,
             onClickOption = { id, option -> viewModel.addOption(id, option) },
-            onClickNext = {
-                viewModel.setSelectedOptions()
-                navigateToOrder(viewModel.menuId)
-            }
+            onClickNext = { viewModel.setSelectedOptions() }
         )
+    }
+
+    if (uiState.isShowMessage) {
+        Toast.makeText(context, "메뉴 옵션을 선택해 주세요~", Toast.LENGTH_SHORT).show()
+        viewModel.showToastDone()
+    }
+
+    LaunchedEffect(key1 = uiState.isNavigateToNext) {
+        if(uiState.isNavigateToNext) {
+            navigateToOrder(viewModel.menuId)
+        }
     }
 }
 
@@ -207,7 +218,7 @@ private fun OptionButtonRow(
     onClickOption: (String) -> Unit
 ) {
     val context = LocalContext.current
-    var selectedOption by remember { mutableStateOf(optionList.first()) }
+    var selectedOption by remember { mutableStateOf<MenuOption?>(null) }
     Column {
         Row(
             modifier = modifier
@@ -224,12 +235,12 @@ private fun OptionButtonRow(
                             selected = isSelected,
                             onClick = {
                                 selectedOption = option
-                                onClickOption(context.getString(selectedOption.title))
+                                selectedOption?.let { onClickOption(context.getString(it.title)) }
                             }
                         ),
                     selectedOption = option,
-                    textColor = if (isSelected) selectedOption.selectedTextColor else selectedOption.unSelectedTextColor,
-                    backgroundColor = if (isSelected) selectedOption.selectedBackGroundColor else selectedOption.unSelectedBackGroundColor
+                    textColor =  selectedOption?.let { if (isSelected) it.selectedTextColor else it.unSelectedTextColor } ?: Color.Black,
+                    backgroundColor = selectedOption?.let { if (isSelected) it.selectedBackGroundColor else it.unSelectedBackGroundColor } ?: Color.LightGray
                 )
             }
         }

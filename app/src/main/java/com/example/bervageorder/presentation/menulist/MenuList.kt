@@ -4,12 +4,6 @@ import com.example.bervageorder.data.entity.MenuType
 import com.example.bervageorder.domain.model.Menu
 
 object MenuList {
-
-    // route( navigate between Screen )
-    interface Router {
-
-    }
-
     // UiState
     data class MenuListUiState(
         // state

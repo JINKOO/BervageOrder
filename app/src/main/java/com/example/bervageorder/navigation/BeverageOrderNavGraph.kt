@@ -5,6 +5,7 @@ import androidx.compose.animation.ExitTransition
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -68,21 +69,26 @@ fun BeverageOrderNavGraph(
             MenuDetailMainScreen(
                 viewModel = viewModel,
                 navigateUp = { navController.navigateUp() },
-                navigateToOrder = { navController.navigate(route = "$MENU_ORDER_SCREEN/$it")}
+                navigateToOrder = { navController.navigate(route = "$MENU_ORDER_SCREEN/$it") }
             )
         }
 
         composable(
             route = BeverageOrderDestination.MENU_ORDER_ROUTE,
             arguments = listOf(
-                navArgument(MENU_ID_ARG) { type = NavType.StringType}
+                navArgument(MENU_ID_ARG) { type = NavType.StringType }
             )
         ) {
             val viewModel = hiltViewModel<OrderViewModel>()
             OrderMainScreen(
                 viewModel = viewModel,
                 navigateUp = { navController.navigateUp() },
-                navigateToIntro = {}
+                navigateToIntro = {
+                    navController.navigate(BeverageOrderDestination.INTRO_ROUTE) {
+                        popUpTo(navController.graph.findStartDestination().id)
+                        launchSingleTop = true
+                    }
+                }
             )
         }
     }

@@ -68,20 +68,20 @@ class MenuDetailViewModel @Inject constructor(
 
     fun setSelectedOptions() {
         Timber.d("selectedOption() :: ${selectedOptionMap.size}")
+        if (selectedOptionMap.isNullOrEmpty()) {
+            _uiState.update { it.copy(isShowMessage = true) }
+            return
+        }
         viewModelScope.launch {
             val optionList = selectedOptionMap.toMap().toList().map { it.second }
             setOptionListUseCase.setOptionList(menuId, optionList)
+                .onSuccess {
+                    _uiState.update { it.copy(isNavigateToNext = true) }
+                }
+                .onFailure {
+                    Timber.w("setSelectedOptions() ERROR :: ${it.message}")
+                }
         }
-//        if (selectedOptionMap.isNotEmpty()) {
-//            // TODO Repository에 저장
-//            Timber.d("selectedOption() :: ${selectedOptionMap.size}")
-//        } else {
-//            _uiState.update {
-//                it.copy(
-//                    isShowMessage = true
-//                )
-//            }
-//        }
     }
 
     fun showToastDone() {

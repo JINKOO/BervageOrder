@@ -6,6 +6,7 @@ object MenuDetail {
     data class OrderDetailUiState(
         val menu: Menu? = null,
         val isShowIceQuantityOption: Boolean = false,
-        val isShowMessage: Boolean = false
+        val isShowMessage: Boolean = false,
+        val isNavigateToNext: Boolean = false
     )
 }
