@@ -1,3 +1,5 @@
+// TODO 1회차 toml 버전 카탚로그로 정의
+
 plugins {
     kotlin("kapt")
     id("com.android.application")

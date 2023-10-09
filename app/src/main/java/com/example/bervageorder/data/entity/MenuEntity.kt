@@ -1,5 +1,7 @@
 package com.example.bervageorder.data.entity
 
+import androidx.compose.runtime.Composable
+
 data class MenuEntity(
     val id: String? = null,
     val type: MenuType? = null,
@@ -15,6 +17,14 @@ enum class MenuType {
     TEA,
     DESSERT,
     NONE
+}
+
+/**
+ *  해상도 대응
+ */
+@Composable
+fun MenuType.getPadding(isCompact: Boolean) {
+    // dp
 }
 
 enum class TemperatureType {

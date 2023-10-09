@@ -9,7 +9,7 @@
     <string name="title_menu_list_screen">메뉴</string>
 
     <!-- Menu Detail -->
-    <string name="title_order_screen">메뉴 옵션 선택</string>
+    <string name="title_menu_detail_screen">메뉴 옵션 선택</string>
     <string name="title_default_option">기본</string>
     <string name="title_decaffeine_option">디카페인</string>
     <string name="title_ice_option">얼음</string>
@@ -22,6 +22,8 @@
     <string name="button_ice_large">많이</string>
 
     <!-- Order Detail -->
-    <string name="titile_order_screen">주문 상세</string>
+    <string name="title_order_screen">주문 상세</string>
     <string name="button_close">닫기</string>
+
+    <string name="empty_string"></string>
 </resources>

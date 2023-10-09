@@ -9,7 +9,7 @@ data class Menu(
     val menuType: MenuType = MenuType.NONE,
     val name: String = "",
     val temperature: TemperatureType = TemperatureType.NONE,
-    val price: String = "",
+    val price: String = "", // 상식적인 타입으로 하자 INT로
     val isCaffeine: Boolean = false
 ) {
     companion object {

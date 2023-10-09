@@ -33,6 +33,7 @@ import com.example.bervageorder.R
 import com.example.bervageorder.data.entity.TemperatureType
 import com.example.bervageorder.domain.model.Menu
 import com.example.bervageorder.presentation.common.BeverageOrderTopAppBar
+import com.example.bervageorder.presentation.common.BeverageOrderTopAppBarState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -47,7 +48,7 @@ fun MenuDetailMainScreen(
     Scaffold(
         topBar = {
             BeverageOrderTopAppBar(
-                titleId = R.string.title_order_screen,
+                state = BeverageOrderTopAppBarState.MenuDetailTitle,
                 navigateUp = {
                     navigateUp()
                     viewModel.clearOption()

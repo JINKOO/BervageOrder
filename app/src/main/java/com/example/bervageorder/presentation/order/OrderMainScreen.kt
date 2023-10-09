@@ -21,6 +21,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.bervageorder.R
 import com.example.bervageorder.domain.model.Menu
 import com.example.bervageorder.presentation.common.BeverageOrderTopAppBar
+import com.example.bervageorder.presentation.common.BeverageOrderTopAppBarState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -34,7 +35,7 @@ fun OrderMainScreen(
     Scaffold(
         topBar = {
             BeverageOrderTopAppBar(
-                titleId = R.string.titile_order_screen,
+                state = BeverageOrderTopAppBarState.OrderTitle,
                 navigateUp = navigateUp
             )
         },
