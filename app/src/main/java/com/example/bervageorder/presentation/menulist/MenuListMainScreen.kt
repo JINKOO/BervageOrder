@@ -18,8 +18,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.example.bervageorder.R
 import com.example.bervageorder.data.entity.MenuType
 import com.example.bervageorder.domain.model.Menu
 import com.example.bervageorder.presentation.common.BeverageOrderTopAppBar
@@ -28,25 +28,35 @@ import com.example.bervageorder.presentation.common.BeverageOrderTopAppBar
 @Composable
 fun MenuListMainScreen(
     modifier: Modifier = Modifier,
-    viewModel: MenuListViewModel,
+    viewModel: MenuListViewModel = hiltViewModel(),
     navigateToOrderDetail: (String) -> Unit,
-    navigateUp: () -> Unit
+    navigateUp: () -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     Scaffold(
         modifier = modifier.fillMaxSize(),
         topBar = {
             BeverageOrderTopAppBar(
-                titleId = R.string.title_menu_list_screen,
-                navigateUp = { navigateUp() }
+                state = uiState.getAppBarState(),
+                navigateUp = { navigateUp() },
             )
         },
     ) { paddingValues ->
-        MenuList(
-            modifier = Modifier.padding(paddingValues = paddingValues),
-            menuGrouped = uiState.menuMap,
-            navigateToOrderDetail = navigateToOrderDetail
-        )
+        when (uiState) {
+            MenuListUiState.Error -> {
+            }
+
+            MenuListUiState.Loading -> {
+            }
+
+            is MenuListUiState.Success -> {
+                MenuList(
+                    modifier = Modifier.padding(paddingValues = paddingValues),
+                    menuGrouped = uiState.menuMap,
+                    navigateToOrderDetail = navigateToOrderDetail,
+                )
+            }
+        }
     }
 }
 
@@ -55,23 +65,23 @@ fun MenuListMainScreen(
 private fun MenuList(
     modifier: Modifier = Modifier,
     menuGrouped: Map<MenuType, List<Menu>> = emptyMap(),
-    navigateToOrderDetail: (String) -> Unit
+    navigateToOrderDetail: (String) -> Unit,
 ) {
     LazyColumn(
-        modifier = modifier
+        modifier = modifier,
     ) {
         menuGrouped.forEach { (menuType, menuListByMenuType) ->
             stickyHeader {
                 MenuHeader(
                     menuType = menuType,
-                    color = Color.LightGray
+                    color = Color.LightGray,
                 )
             }
 
             items(menuListByMenuType) { menu ->
                 MenuItem(
                     menu = menu,
-                    navigateToOrderDetail =  { navigateToOrderDetail(menu.id) }
+                    navigateToOrderDetail = { navigateToOrderDetail(menu.id) },
                 )
             }
         }
@@ -81,17 +91,17 @@ private fun MenuList(
 @Composable
 private fun MenuHeader(
     menuType: MenuType,
-    color: Color
+    color: Color,
 ) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .background(color)
+            .background(color),
     ) {
         Text(
             modifier = Modifier.padding(horizontal = 16.dp),
             text = menuType.name,
-            style = MaterialTheme.typography.headlineLarge
+            style = MaterialTheme.typography.headlineLarge,
         )
     }
 }
@@ -100,21 +110,21 @@ private fun MenuHeader(
 private fun MenuItem(
     modifier: Modifier = Modifier,
     menu: Menu,
-    navigateToOrderDetail: () -> Unit
+    navigateToOrderDetail: () -> Unit,
 ) {
     Column(
         modifier = modifier
             .padding(16.dp)
             .fillMaxWidth()
-            .clickable { navigateToOrderDetail() }
+            .clickable { navigateToOrderDetail() },
     ) {
         Text(
             text = menu.name,
-            style = MaterialTheme.typography.bodyLarge
+            style = MaterialTheme.typography.bodyLarge,
         )
         Text(
             text = menu.price,
-            style = MaterialTheme.typography.bodyMedium
+            style = MaterialTheme.typography.bodyMedium,
         )
     }
 }

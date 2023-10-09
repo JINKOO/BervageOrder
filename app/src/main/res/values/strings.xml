@@ -24,4 +24,6 @@
     <!-- Order Detail -->
     <string name="titile_order_screen">주문 상세</string>
     <string name="button_close">닫기</string>
+
+    <string name="empty"></string>
 </resources>

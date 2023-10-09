@@ -16,68 +16,67 @@ import com.example.bervageorder.navigation.BeverageOrderDestinationArg.MENU_ID_A
 import com.example.bervageorder.navigation.BeverageOrderScreen.MENU_DETAIL_SCREEN
 import com.example.bervageorder.navigation.BeverageOrderScreen.MENU_ORDER_SCREEN
 import com.example.bervageorder.presentation.intro.IntroMainScreen
-import com.example.bervageorder.presentation.menulist.MenuListMainScreen
-import com.example.bervageorder.presentation.menulist.MenuListViewModel
 import com.example.bervageorder.presentation.menudetail.MenuDetailMainScreen
 import com.example.bervageorder.presentation.menudetail.MenuDetailViewModel
+import com.example.bervageorder.presentation.menulist.MenuListMainScreen
+import com.example.bervageorder.presentation.menulist.MenuListViewModel
 import com.example.bervageorder.presentation.order.OrderMainScreen
 import com.example.bervageorder.presentation.order.OrderViewModel
 
-
 @Composable
 fun BeverageOrderNavGraph(
-    // TODO Composable에서 항상 Modifier를 default 파라미터 형식으로 정의해야 하는지
+    // Composable에서 항상 Modifier를 default 파라미터 형식으로 정의해야 하는지
     modifier: Modifier = Modifier,
-    navController: NavHostController = rememberNavController()
+    navController: NavHostController = rememberNavController(),
 ) {
     NavHost(
         navController = navController,
         startDestination = BeverageOrderDestination.INTRO_ROUTE,
         enterTransition = { EnterTransition.None },
-        exitTransition = { ExitTransition.None }
+        exitTransition = { ExitTransition.None },
     ) {
         composable(
-            route = BeverageOrderDestination.INTRO_ROUTE
+            route = BeverageOrderDestination.INTRO_ROUTE,
         ) {
             IntroMainScreen(
-                navigateToMenuList = { navController.navigate(BeverageOrderDestination.MENU_LIST_ROUTE) }
+                navigateToMenuList = { navController.navigate(BeverageOrderDestination.MENU_LIST_ROUTE) },
             )
         }
 
         composable(
-            route = BeverageOrderDestination.MENU_LIST_ROUTE
+            route = BeverageOrderDestination.MENU_LIST_ROUTE,
         ) {
             val viewModel = hiltViewModel<MenuListViewModel>()
             MenuListMainScreen(
                 viewModel = viewModel,
                 navigateToOrderDetail = {
                     navController.navigate(
-                        route = "$MENU_DETAIL_SCREEN/$it"
+                        route = "$MENU_DETAIL_SCREEN/$it",
                     )
                 },
-                navigateUp = { navController.navigateUp() }
+                navigateUp = { navController.navigateUp() },
             )
         }
 
         composable(
             route = BeverageOrderDestination.MENU_DETAIL_ROUTE,
             arguments = listOf(
-                navArgument(MENU_ID_ARG) { type = NavType.StringType }
-            )
+                navArgument(MENU_ID_ARG) { type = NavType.StringType },
+            ),
         ) {
             val viewModel = hiltViewModel<MenuDetailViewModel>()
             MenuDetailMainScreen(
                 viewModel = viewModel,
                 navigateUp = { navController.navigateUp() },
-                navigateToOrder = { navController.navigate(route = "$MENU_ORDER_SCREEN/$it") }
+                navigateToOrder = { navController.navigate(route = "$MENU_ORDER_SCREEN/$it") },
             )
         }
 
         composable(
             route = BeverageOrderDestination.MENU_ORDER_ROUTE,
             arguments = listOf(
-                navArgument(MENU_ID_ARG) { type = NavType.StringType }
-            )
+                navArgument(MENU_ID_ARG) { type = NavType.StringType },
+            ),
         ) {
             val viewModel = hiltViewModel<OrderViewModel>()
             OrderMainScreen(
@@ -88,7 +87,7 @@ fun BeverageOrderNavGraph(
                         popUpTo(navController.graph.findStartDestination().id)
                         launchSingleTop = true
                     }
-                }
+                },
             )
         }
     }
