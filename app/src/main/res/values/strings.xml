@@ -2,7 +2,7 @@
     <string name="app_name">BeverageOrder</string>
 
     <!-- Intro -->
-    <string name="title_greeting_start_order">반가워요\n주문을 시작할게요</string>
+    <string name="title_intro_start_order">반가워요\n주문을 시작할게요</string>
     <string name="button_next">다음</string>
 
     <!-- MenuList -->
@@ -26,4 +26,5 @@
     <string name="button_close">닫기</string>
 
     <string name="empty_string"></string>
+    <string name="title_error_message">정보를 불러오는 도중 오류가 발생했어요.\n잠시후, 다시 시도해 주세요.</string>
 </resources>

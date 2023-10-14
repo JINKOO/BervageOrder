@@ -57,9 +57,7 @@ fun BeverageOrderNavGraph(
 //            val viewModel = hiltViewModel<MenuListViewModel>()
             MenuListMainScreen(
                 navigateToOrderDetail = {
-                    navController.navigate(
-                        route = "$MENU_DETAIL_SCREEN/$it"
-                    )
+                    navController.navigate(route = "$MENU_DETAIL_SCREEN/$it")
                 },
                 navigateUp = { navController.navigateUp() }
             )

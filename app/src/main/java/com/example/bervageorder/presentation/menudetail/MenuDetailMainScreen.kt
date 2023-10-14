@@ -1,27 +1,24 @@
 package com.example.bervageorder.presentation.menudetail
 
-import android.widget.Toast
 import androidx.annotation.ColorRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.selectableGroup
-import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -30,10 +27,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.bervageorder.R
-import com.example.bervageorder.data.entity.TemperatureType
-import com.example.bervageorder.domain.model.Menu
 import com.example.bervageorder.presentation.common.BeverageOrderTopAppBar
 import com.example.bervageorder.presentation.common.BeverageOrderTopAppBarState
+import com.example.bervageorder.presentation.menudetail.state.MenuDetailScreen
+import com.example.bervageorder.presentation.menudetail.state.MenuDetailUiState
+import com.example.bervageorder.presentation.menudetail.state.MenuOption
+import com.example.bervageorder.presentation.menudetail.state.deCaffeineOptionList
+import com.example.bervageorder.presentation.menudetail.state.defaultOptionLists
+import com.example.bervageorder.presentation.menudetail.state.iceQuantityOptionList
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -43,8 +44,7 @@ fun MenuDetailMainScreen(
     navigateUp: () -> Unit,
     navigateToOrder: (String) -> Unit
 ) {
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    val context = LocalContext.current
+    val uiState: MenuDetailUiState by viewModel.uiState.collectAsStateWithLifecycle()
     Scaffold(
         topBar = {
             BeverageOrderTopAppBar(
@@ -56,83 +56,41 @@ fun MenuDetailMainScreen(
             )
         },
     ) { paddingValues ->
-        OrderContent(
-            modifier = modifier
-                .fillMaxSize()
-                .padding(paddingValues = paddingValues),
-            menu = uiState.menu,
-            isShowIceQuantityOption = uiState.isShowIceQuantityOption,
-            onClickOption = { id, option -> viewModel.addOption(id, option) },
-            onClickNext = { viewModel.setSelectedOptions() }
-        )
-    }
-
-    if (uiState.isShowMessage) {
-        Toast.makeText(context, "메뉴 옵션을 선택해 주세요~", Toast.LENGTH_SHORT).show()
-        viewModel.showToastDone()
-    }
-
-    LaunchedEffect(key1 = uiState.isNavigateToNext) {
-        if(uiState.isNavigateToNext) {
-            navigateToOrder(viewModel.menuId)
+        var isShowIceQuantityOption by rememberSaveable { mutableStateOf(false) }
+        when(uiState) {
+            is MenuDetailUiState.None -> {}
+            is MenuDetailUiState.Loading -> {}
+            is MenuDetailUiState.Success -> {
+                MenuDetailScreen(
+                    modifier = modifier.padding(paddingValues = paddingValues),
+                    menu = (uiState as MenuDetailUiState.Success).menu,
+                    onClickOption = { id, option -> viewModel.addOption(id, option) },
+                    onClickIceOption = { isShowIceQuantityOption = true },
+                    isShowIceQuantityOption = isShowIceQuantityOption,
+                    onClickNext = { viewModel.setSelectedOptions() }
+                )
+            }
+            is MenuDetailUiState.Error -> {}
         }
     }
+
+    // TODO 에러 메세지 보여주는 로직 수정, SnackBar로 보여주기
+//    if (uiState.isShowMessage) {
+//        Toast.makeText(context, "메뉴 옵션을 선택해 주세요~", Toast.LENGTH_SHORT).show()
+//        viewModel.showToastDone()
+//    }
+//
+//    LaunchedEffect(key1 = uiState.isNavigateToNext) {
+//        if(uiState.isNavigateToNext) {
+//            navigateToOrder(viewModel.menuId)
+//        }
+//    }
 }
 
-@Composable
-private fun OrderContent(
-    modifier: Modifier = Modifier,
-    menu: Menu?,
-    isShowIceQuantityOption: Boolean,
-    onClickOption: (Int, String) -> Unit,
-    onClickNext: () -> Unit
-) {
-    if (menu != null) {
-        Column(
-            modifier = modifier
-                .fillMaxSize()
-                .padding(16.dp)
-        ) {
-            // 선택한 메뉴 명
-            HeaderTitle(
-                modifier = Modifier.fillMaxWidth(),
-                name = menu.name,
-                price = menu.price
-            )
-            if (menu.temperature == TemperatureType.BOTH) {
-                DefaultOptionRow(
-                    modifier = Modifier.padding(top = 32.dp),
-                    onClickOption = onClickOption
-                )
-            }
 
-            if (menu.isCaffeine) {
-                DecaffeineOptionRow(
-                    modifier = Modifier.padding(top = 32.dp),
-                    onClickOption = onClickOption
-                )
-            }
-
-            // 얼음 옵션에서 선택이 된 경우, 동적으로 노출되도록 한다.
-            if (isShowIceQuantityOption) {
-                IceQuantityOptionRow(
-                    modifier = Modifier.padding(top = 32.dp),
-                    onClickOption = onClickOption
-                )
-            }
-
-            Button(
-                modifier = Modifier.fillMaxWidth(),
-                onClick = { onClickNext() }
-            ) {
-                Text(text = "다음")
-            }
-        }
-    }
-}
 
 @Composable
-private fun HeaderTitle(
+fun HeaderTitle(
     modifier: Modifier = Modifier,
     name: String,
     price: String
@@ -153,8 +111,9 @@ private fun HeaderTitle(
 }
 
 @Composable
-private fun DefaultOptionRow(
+fun IceOptionRow(
     modifier: Modifier = Modifier,
+    onClickIceOption: () -> Unit,
     onClickOption: (Int, String) -> Unit
 ) {
     Column(
@@ -167,13 +126,13 @@ private fun DefaultOptionRow(
         )
         OptionButtonRow(
             optionList = defaultOptionLists,
-            onClickOption = { onClickOption(0, it) }
+            onClickOption = { onClickIceOption(); onClickOption(0, it) }
         )
     }
 }
 
 @Composable
-private fun DecaffeineOptionRow(
+fun DecaffeineOptionRow(
     modifier: Modifier = Modifier,
     onClickOption: (Int, String) -> Unit
 ) {
@@ -193,7 +152,7 @@ private fun DecaffeineOptionRow(
 }
 
 @Composable
-private fun IceQuantityOptionRow(
+fun IceQuantityOptionRow(
     modifier: Modifier = Modifier,
     onClickOption: (Int, String) -> Unit
 ) {
@@ -213,7 +172,7 @@ private fun IceQuantityOptionRow(
 }
 
 @Composable
-private fun OptionButtonRow(
+fun OptionButtonRow(
     modifier: Modifier = Modifier,
     optionList: List<MenuOption> = emptyList(),
     onClickOption: (String) -> Unit
@@ -249,7 +208,7 @@ private fun OptionButtonRow(
 }
 
 @Composable
-private fun TwoOptionItem(
+fun TwoOptionItem(
     modifier: Modifier = Modifier,
     selectedOption: MenuOption,
     @ColorRes textColor: Color,

@@ -2,6 +2,7 @@ package com.example.bervageorder.presentation.menulist
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.bervageorder.R
 import com.example.bervageorder.data.entity.MenuType
 import com.example.bervageorder.domain.model.Menu
 import com.example.bervageorder.domain.usecase.GetMenuListUseCase
@@ -36,8 +37,9 @@ class MenuListViewModel @Inject constructor(
     }
 
     /**
-     *  sealed class로 변경 할긋
-     *  State를 만드는 방법은 State를 생성하는쪽에서 생성해야 한다. UiState
+     *  TODO 2회차 질문 :: 아래 로직 처럼, 비즈니스 로직이 ViewModel에 존재하면 안된다.
+     *   ViewModel은 말 그대로 View에 대한 Model이다.
+     *   따라서, View에 필요한 data들만 가공하는 역할을 하도록 수정한다.
      */
     private fun getMenuList() {
         _uiState.update { MenuListUiState.Loading }
@@ -50,17 +52,8 @@ class MenuListViewModel @Inject constructor(
                 }
                 .onFailure {
                     Timber.w("initMenuList() ERROR :: ${it.message}")
-                    _uiState.update { MenuListUiState.Error }
+                    _uiState.update { MenuListUiState.Error(errorMessage = R.string.title_error_message) }
                 }
         }
     }
-
-    // TODO 아래 방식으로 변경
-//    private fun getMenuList() {
-//        _uiState.update { MenuListUiState.Loading }
-//        viewModelScope.launch {
-//            val result = getMenuListUseCase.getMenuList()
-//            _uiState.update { MenuListUiState(result) }
-//        }
-//    }
 }

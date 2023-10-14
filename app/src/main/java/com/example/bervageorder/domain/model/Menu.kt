@@ -12,6 +12,12 @@ data class Menu(
     val price: String = "", // 상식적인 타입으로 하자 INT로
     val isCaffeine: Boolean = false
 ) {
+    val isIceQuantityNeed: Boolean
+        get() = when(menuType) {
+            MenuType.COFFEE, MenuType.ADE -> true
+            else -> false
+        }
+
     companion object {
         operator fun invoke(menuEntity: MenuEntity): Menu {
             return Menu(
