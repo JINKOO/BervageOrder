@@ -80,8 +80,6 @@ fun MenuDetailMainScreen(
     }
 }
 
-
-
 @Composable
 fun HeaderTitle(
     modifier: Modifier = Modifier,
@@ -132,7 +130,7 @@ fun IceOptionRow(
 }
 
 @Composable
-fun DecaffeineOptionRow(
+fun CaffeineOptionRow(
     modifier: Modifier = Modifier,
     onClickOption: (Int, OptionType) -> Unit
 ) {

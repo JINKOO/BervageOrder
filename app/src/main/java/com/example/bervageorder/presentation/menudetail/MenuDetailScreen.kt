@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.example.bervageorder.data.entity.MenuType
 import com.example.bervageorder.domain.model.Menu
 import com.example.bervageorder.presentation.common.button.BottomButton
 import com.example.bervageorder.presentation.common.button.BottomButtonState
@@ -70,7 +69,7 @@ private fun MenuOptionsColumn(
         }
 
         if (menu.isCaffeine) {
-            DecaffeineOptionRow(
+            CaffeineOptionRow(
                 modifier = Modifier.padding(top = 32.dp),
                 onClickOption = onClickOption
             )
