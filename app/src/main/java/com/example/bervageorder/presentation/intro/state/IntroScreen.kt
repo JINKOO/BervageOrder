@@ -15,6 +15,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.bervageorder.R
+import com.example.bervageorder.presentation.common.button.BottomButton
+import com.example.bervageorder.presentation.common.button.BottomButtonState
 
 @Composable
 fun IntroScreen(
@@ -23,29 +25,21 @@ fun IntroScreen(
     navigateToMenuList: () -> Unit
 ) {
     Column(
-        modifier = modifier.fillMaxSize(),
+        modifier = modifier
+            .padding(16.dp)
+            .fillMaxSize(),
         verticalArrangement = Arrangement.SpaceBetween
     ) {
         Text(
-            modifier = Modifier.padding(top = 64.dp, start = 16.dp),
+            modifier = Modifier.padding(top = 48.dp),
             text = stringResource(introTitleId),
             textAlign = TextAlign.Start,
             style = MaterialTheme.typography.headlineLarge
         )
 
-        // TODO 이 앱에서 공통으로 사용하는 BottomButton으로 사용할 수 있도록 추상화
-        Button(
-            modifier = Modifier
-                .padding(horizontal = 16.dp, vertical = 32.dp)
-                .fillMaxWidth(),
-            onClick = {
-                navigateToMenuList()
-            }
-        ) {
-            Text(
-                text = stringResource(R.string.button_next),
-                style = MaterialTheme.typography.bodyLarge
-            )
-        }
+        BottomButton(
+            bottomButtonState = BottomButtonState.Next,
+            onClick = navigateToMenuList
+        )
     }
 }

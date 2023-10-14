@@ -1,4 +1,4 @@
-package com.example.bervageorder.presentation.common
+package com.example.bervageorder.presentation.common.topbar
 
 import androidx.annotation.StringRes
 import androidx.compose.runtime.Composable

@@ -8,8 +8,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.example.bervageorder.presentation.common.BeverageOrderTopAppBar
-import com.example.bervageorder.presentation.common.BeverageOrderTopAppBarState
+import com.example.bervageorder.presentation.common.topbar.BeverageOrderTopAppBar
+import com.example.bervageorder.presentation.common.topbar.BeverageOrderTopAppBarState
 import com.example.bervageorder.presentation.intro.state.IntroScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -19,6 +19,8 @@ fun IntroMainScreen(
     viewModel: IntroViewModel = hiltViewModel(),
     navigateToMenuList: () -> Unit = {}
 ) {
+    // TODO 2회차 질문 :: uiState Collect를 Scaffold내에서 해야하는지, 아니면 아래처럼 해야하는지?
+    //  architecture-sample의 TODO APP을 보면 Scaffold내에서 collect.
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     Scaffold(

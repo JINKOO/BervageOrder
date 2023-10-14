@@ -173,5 +173,10 @@ class MenuRepositoryImpl @Inject constructor() : MenuRepository {
         Result.failure<Exception>(it)
     }
 
+    override suspend fun clearAll() = withContext(Dispatchers.IO) {
+        menuList.clear()
+        orderMenuOptionList.clear()
+    }
+
     private fun createMenuId(): String = UUID.randomUUID().toString()
 }

@@ -7,6 +7,7 @@ import com.example.bervageorder.navigation.BeverageOrderDestinationArg
 import com.example.bervageorder.domain.usecase.GetMenuUseCase
 import com.example.bervageorder.domain.usecase.SetOptionListUseCase
 import com.example.bervageorder.presentation.menudetail.state.MenuDetailUiState
+import com.example.bervageorder.presentation.menudetail.state.OptionType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -44,10 +45,7 @@ class MenuDetailViewModel @Inject constructor(
                     Timber.d("getCurrentMenu() result :: ${menu}")
                     _uiState.update {
                         MenuDetailUiState.Success(
-                            menu = menu,
-                            isShowIceQuantityOption = true,
-                            isShowMessage = false,
-                            isNavigateToNext = false
+                            menu = menu
                         )
                     }
                 }
@@ -58,9 +56,9 @@ class MenuDetailViewModel @Inject constructor(
         }
     }
 
-    fun addOption(optionId: Int, option: String) {
+    fun addOption(optionId: Int, option: OptionType) {
         Timber.d("selectedOption() :: ${optionId} / ${option}")
-        selectedOptionMap[optionId] = option
+        selectedOptionMap[optionId] = option.name
     }
 
     fun clearOption() {
@@ -72,16 +70,12 @@ class MenuDetailViewModel @Inject constructor(
         viewModelScope.launch {
             val optionList = selectedOptionMap.toMap().toList().map { it.second }
             setOptionListUseCase.setOptionList(menuId, optionList)
-                .onSuccess {
-
+                .onSuccess { result ->
+                    _uiState.update { MenuDetailUiState.AllOptionSelected }
                 }
                 .onFailure {
                     Timber.w("setSelectedOptions() ERROR :: ${it.message}")
                 }
         }
-    }
-
-    fun showToastDone() {
-
     }
 }

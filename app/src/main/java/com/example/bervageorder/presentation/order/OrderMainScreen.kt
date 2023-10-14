@@ -20,8 +20,10 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.bervageorder.R
 import com.example.bervageorder.domain.model.Menu
-import com.example.bervageorder.presentation.common.BeverageOrderTopAppBar
-import com.example.bervageorder.presentation.common.BeverageOrderTopAppBarState
+import com.example.bervageorder.presentation.common.button.BottomButton
+import com.example.bervageorder.presentation.common.button.BottomButtonState
+import com.example.bervageorder.presentation.common.topbar.BeverageOrderTopAppBar
+import com.example.bervageorder.presentation.common.topbar.BeverageOrderTopAppBarState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -87,15 +89,10 @@ private fun OrderContent(
                 )
             }
 
-            Button(
-                modifier = Modifier.fillMaxWidth(),
-                onClick = { navigateToIntro() }
-            ) {
-                Text(
-                    text = stringResource(R.string.button_close),
-                    style = MaterialTheme.typography.bodyLarge
-                )
-            }
+            BottomButton(
+                bottomButtonState = BottomButtonState.Close,
+                onClick = navigateToIntro
+            )
         }
     }
 }

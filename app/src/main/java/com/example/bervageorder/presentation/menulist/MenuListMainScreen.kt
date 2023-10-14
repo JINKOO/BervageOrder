@@ -9,8 +9,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.example.bervageorder.presentation.common.BeverageOrderTopAppBar
-import com.example.bervageorder.presentation.common.BeverageOrderTopAppBarState
+import com.example.bervageorder.presentation.common.topbar.BeverageOrderTopAppBar
+import com.example.bervageorder.presentation.common.topbar.BeverageOrderTopAppBarState
 import com.example.bervageorder.presentation.menulist.state.ErrorScreen
 import com.example.bervageorder.presentation.menulist.state.LoadingScreen
 import com.example.bervageorder.presentation.menulist.state.MenuList

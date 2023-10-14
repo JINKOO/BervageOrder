@@ -3,6 +3,7 @@ package com.example.bervageorder.presentation.order
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.bervageorder.data.repository.MenuRepository
 import com.example.bervageorder.domain.usecase.GetOrderMenuUseCase
 import com.example.bervageorder.navigation.BeverageOrderDestinationArg.MENU_ID_ARG
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,7 +18,8 @@ import javax.inject.Inject
 @HiltViewModel
 class OrderViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
-    private val getOrderMenuUseCase: GetOrderMenuUseCase
+    private val getOrderMenuUseCase: GetOrderMenuUseCase,
+    private val menuRepository: MenuRepository,
 ) : ViewModel() {
 
     val menuId: String = savedStateHandle.get<String>(MENU_ID_ARG).orEmpty()
@@ -52,11 +54,20 @@ class OrderViewModel @Inject constructor(
         val stringBuilder = StringBuilder()
         optionList.forEachIndexed { index, option ->
             stringBuilder.append(option).also {
-                if(index != optionList.lastIndex) {
+                if (index != optionList.lastIndex) {
                     it.append("/ ")
                 }
             }
         }
         return stringBuilder.toString()
+    }
+
+    // TODO clear
+    override fun onCleared() {
+        super.onCleared()
+        Timber.d("viewModel clear")
+        viewModelScope.launch {
+            menuRepository.clearAll()
+        }
     }
 }

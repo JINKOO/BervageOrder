@@ -1,30 +1,30 @@
 <resources>
-    <string name="app_name">BeverageOrder</string>
+    <string name="app_name" translatable="false">BeverageOrder</string>
 
     <!-- Intro -->
-    <string name="title_intro_start_order">반가워요\n주문을 시작할게요</string>
-    <string name="button_next">다음</string>
+    <string name="title_intro_start_order" translatable="false">반가워요\n주문을 시작할게요</string>
+    <string name="button_next" translatable="false">다음</string>
 
     <!-- MenuList -->
-    <string name="title_menu_list_screen">메뉴</string>
+    <string name="title_menu_list_screen" translatable="false">메뉴</string>
 
     <!-- Menu Detail -->
-    <string name="title_menu_detail_screen">메뉴 옵션 선택</string>
-    <string name="title_default_option">기본</string>
-    <string name="title_decaffeine_option">디카페인</string>
-    <string name="title_ice_option">얼음</string>
-    <string name="button_hot">HOT</string>
-    <string name="button_ice">ICE</string>
-    <string name="button_caffeine">카페인</string>
-    <string name="button_decaffeine">디카페인</string>
-    <string name="button_ice_small">적게</string>
-    <string name="button_ice_medium">보통</string>
-    <string name="button_ice_large">많이</string>
+    <string name="title_menu_detail_screen" translatable="false">메뉴 옵션 선택</string>
+    <string name="title_default_option" translatable="false">기본</string>
+    <string name="title_decaffeine_option" translatable="false">디카페인</string>
+    <string name="title_ice_option" translatable="false">얼음</string>
+    <string name="button_hot" translatable="false">HOT</string>
+    <string name="button_ice" translatable="false">ICE</string>
+    <string name="button_caffeine" translatable="false">카페인</string>
+    <string name="button_decaffeine" translatable="false">디카페인</string>
+    <string name="button_ice_less" translatable="false">적게</string>
+    <string name="button_ice_normal" translatable="false">보통</string>
+    <string name="button_ice_more" translatable="false">많이</string>
 
     <!-- Order Detail -->
-    <string name="title_order_screen">주문 상세</string>
-    <string name="button_close">닫기</string>
+    <string name="title_order_screen" translatable="false">주문 상세</string>
+    <string name="button_close" translatable="false">닫기</string>
 
-    <string name="empty_string"></string>
-    <string name="title_error_message">정보를 불러오는 도중 오류가 발생했어요.\n잠시후, 다시 시도해 주세요.</string>
+    <string name="empty_string" translatable="false"></string>
+    <string name="title_error_message" translatable="false">정보를 불러오는 도중 오류가 발생했어요.\n잠시후, 다시 시도해 주세요.</string>
 </resources>

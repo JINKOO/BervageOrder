@@ -1,4 +1,4 @@
-package com.example.bervageorder.presentation.common
+package com.example.bervageorder.presentation.common.topbar
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack

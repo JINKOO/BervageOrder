@@ -10,4 +10,5 @@ interface MenuRepository {
     suspend fun getMenuById(menuId: String): Result<Menu?>
     suspend fun setOptionList(menuId: String, optionList: List<String>): Result<Boolean>
     suspend fun getOrderMenu(menuId: String): Result<OrderMenu>
+    suspend fun clearAll()
 }
