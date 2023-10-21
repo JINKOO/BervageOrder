@@ -9,9 +9,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.bervageorder.domain.model.Menu
+import com.example.bervageorder.domain.model.OptionType
 import com.example.bervageorder.presentation.common.button.BottomButton
 import com.example.bervageorder.presentation.common.button.BottomButtonState
-import com.example.bervageorder.presentation.menudetail.state.OptionType
 
 @Composable
 fun MenuDetailScreen(
@@ -58,7 +58,7 @@ private fun MenuOptionsColumn(
         HeaderTitle(
             modifier = Modifier.fillMaxWidth(),
             name = menu.name,
-            price = menu.price
+            price = menu.priceFormatString
         )
         if (menu.isDefaultOption) {
             IceOptionRow(

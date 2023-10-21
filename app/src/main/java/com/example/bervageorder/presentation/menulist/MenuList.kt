@@ -1,4 +1,4 @@
-package com.example.bervageorder.presentation.menulist.state
+package com.example.bervageorder.presentation.menulist
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -84,7 +84,7 @@ private fun MenuItem(
             style = MaterialTheme.typography.bodyLarge
         )
         Text(
-            text = menu.price,
+            text = menu.priceFormatString,
             style = MaterialTheme.typography.bodyMedium
         )
     }

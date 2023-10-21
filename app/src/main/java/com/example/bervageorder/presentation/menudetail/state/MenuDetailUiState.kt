@@ -7,10 +7,12 @@ sealed class MenuDetailUiState {
 
     object Loading: MenuDetailUiState()
 
-    object Error: MenuDetailUiState()
-
     data class Success(
         val menu: Menu? = null
+    ): MenuDetailUiState()
+
+    data class Error(
+        val messageId: Int,
     ): MenuDetailUiState()
 
     object AllOptionSelected: MenuDetailUiState()

@@ -4,16 +4,7 @@ import androidx.annotation.ColorRes
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import com.example.bervageorder.R
-
-enum class OptionType {
-    HOT,
-    ICE,
-    CAFFEINE,
-    DE_CAFFEINE,
-    ICE_LESS,
-    ICE_NORMAL,
-    ICE_MORE
-}
+import com.example.bervageorder.domain.model.OptionType
 
 sealed class MenuOptionState(
     val type: OptionType,

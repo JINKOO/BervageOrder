@@ -22,6 +22,7 @@ import com.example.bervageorder.presentation.menudetail.MenuDetailMainScreen
 import com.example.bervageorder.presentation.menudetail.MenuDetailViewModel
 import com.example.bervageorder.presentation.order.OrderMainScreen
 import com.example.bervageorder.presentation.order.OrderViewModel
+import timber.log.Timber
 
 /**
  *  XML 방식 VS Compose 방식
@@ -56,9 +57,7 @@ fun BeverageOrderNavGraph(
             // 여기서 viewModel을 저으이하는 것과, 최상위 Compose에서 정의하는 방식 생명주기가 다르다.
 //            val viewModel = hiltViewModel<MenuListViewModel>()
             MenuListMainScreen(
-                navigateToOrderDetail = {
-                    navController.navigate(route = "$MENU_DETAIL_SCREEN/$it")
-                },
+                navigateToOrderDetail = { navController.navigate(route = "$MENU_DETAIL_SCREEN/$it") },
                 navigateUp = { navController.navigateUp() }
             )
         }
@@ -81,9 +80,7 @@ fun BeverageOrderNavGraph(
                 navArgument(MENU_ID_ARG) { type = NavType.StringType }
             )
         ) {
-            val viewModel = hiltViewModel<OrderViewModel>()
             OrderMainScreen(
-                viewModel = viewModel,
                 navigateUp = { navController.navigateUp() },
                 navigateToIntro = {
                     navController.navigate(BeverageOrderDestination.INTRO_ROUTE) {

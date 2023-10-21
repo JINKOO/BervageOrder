@@ -1,4 +1,4 @@
-package com.example.bervageorder.presentation.menulist.state
+package com.example.bervageorder.presentation.common.error
 
 import androidx.annotation.StringRes
 import androidx.compose.foundation.Image

@@ -7,7 +7,7 @@ data class MenuEntity(
     val type: MenuType? = null,
     val name: String? = null,
     val temperature: TemperatureType? = null,
-    val price: String? = null,
+    val price: Int? = null,
     val isCaffeine: Boolean? = null
 )
 

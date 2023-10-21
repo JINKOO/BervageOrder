@@ -5,8 +5,14 @@ import com.example.bervageorder.data.entity.MenuType
 import com.example.bervageorder.data.entity.TemperatureType
 import com.example.bervageorder.data.repository.MenuRepository
 import com.example.bervageorder.domain.model.Menu
+import com.example.bervageorder.domain.model.OptionType
 import com.example.bervageorder.domain.model.OrderMenu
+import com.example.bervageorder.presentation.menulist.MenuList
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.withContext
 import timber.log.Timber
 import java.lang.NullPointerException
@@ -18,8 +24,12 @@ import javax.inject.Singleton
 class MenuRepositoryImpl @Inject constructor() : MenuRepository {
 
     override val menuList: MutableList<Menu> = mutableListOf()
+    override val orderMenuOptionList: MutableList<OptionType> = mutableListOf()
 
-    override val orderMenuOptionList: MutableList<String> = mutableListOf()
+    override val menuListFlow: Flow<List<Menu>> = flow {
+        val menuList = getFakeMenuList().map { Menu(it) }
+        emit(menuList)
+    }
 
     override suspend fun getMenuList(): Result<List<Menu>> =
         // TODO 질문 :: Repository에서 Entity -> Model로 변경 방식이 맞는지? runCatching의 올바르게 사용했는지..??
@@ -55,7 +65,7 @@ class MenuRepositoryImpl @Inject constructor() : MenuRepository {
                     type = MenuType.COFFEE,
                     name = "아메리카노",
                     temperature = TemperatureType.BOTH,
-                    price = "1000",
+                    price = 1_000,
                     isCaffeine = true
                 ),
                 MenuEntity(
@@ -63,7 +73,7 @@ class MenuRepositoryImpl @Inject constructor() : MenuRepository {
                     type = MenuType.COFFEE,
                     name = "카페라떼",
                     temperature = TemperatureType.BOTH,
-                    price = "1500",
+                    price = 1_500,
                     isCaffeine = true
                 ),
                 MenuEntity(
@@ -71,7 +81,7 @@ class MenuRepositoryImpl @Inject constructor() : MenuRepository {
                     type = MenuType.COFFEE,
                     name = "카푸치노",
                     temperature = TemperatureType.BOTH,
-                    price = "2000",
+                    price = 2_000,
                     isCaffeine = true
                 ),
                 MenuEntity(
@@ -79,7 +89,7 @@ class MenuRepositoryImpl @Inject constructor() : MenuRepository {
                     type = MenuType.ADE,
                     name = "오렌지에이드",
                     temperature = TemperatureType.ICE,
-                    price = "2500",
+                    price = 2_500,
                     isCaffeine = false
                 ),
                 MenuEntity(
@@ -87,7 +97,7 @@ class MenuRepositoryImpl @Inject constructor() : MenuRepository {
                     type = MenuType.ADE,
                     name = "망고에이드",
                     temperature = TemperatureType.ICE,
-                    price = "2500",
+                    price = 2_500,
                     isCaffeine = false
                 ),
                 MenuEntity(
@@ -95,7 +105,7 @@ class MenuRepositoryImpl @Inject constructor() : MenuRepository {
                     type = MenuType.TEA,
                     name = "얼그레이티",
                     temperature = TemperatureType.HOT,
-                    price = "1000",
+                    price = 1_000,
                     isCaffeine = true
                 ),
                 MenuEntity(
@@ -103,7 +113,7 @@ class MenuRepositoryImpl @Inject constructor() : MenuRepository {
                     type = MenuType.TEA,
                     name = "페퍼민트티",
                     temperature = TemperatureType.HOT,
-                    price = "2500",
+                    price = 2_500,
                     isCaffeine = true
                 ),
                 MenuEntity(
@@ -111,7 +121,7 @@ class MenuRepositoryImpl @Inject constructor() : MenuRepository {
                     type = MenuType.DESSERT,
                     name = "치즈케이크",
                     temperature = TemperatureType.NONE,
-                    price = "3000",
+                    price = 3_000,
                     isCaffeine = false
                 ),
                 MenuEntity(
@@ -119,7 +129,7 @@ class MenuRepositoryImpl @Inject constructor() : MenuRepository {
                     type = MenuType.DESSERT,
                     name = "초코케이크",
                     temperature = TemperatureType.NONE,
-                    price = "3000",
+                    price = 3_000,
                     isCaffeine = false
                 ),
                 MenuEntity(
@@ -127,7 +137,7 @@ class MenuRepositoryImpl @Inject constructor() : MenuRepository {
                     type = MenuType.DESSERT,
                     name = "마들렌",
                     temperature = TemperatureType.NONE,
-                    price = "1000",
+                    price = 1_000,
                     isCaffeine = false
                 ),
                 MenuEntity(
@@ -135,13 +145,13 @@ class MenuRepositoryImpl @Inject constructor() : MenuRepository {
                     type = MenuType.DESSERT,
                     name = "휘낭시에",
                     temperature = TemperatureType.NONE,
-                    price = "1500",
+                    price = 1_500,
                     isCaffeine = false
                 )
             )
         }
 
-    override suspend fun setOptionList(menuId: String, optionList: List<String>): Result<Boolean> {
+    override suspend fun setOptionList(menuId: String, optionList: List<OptionType>): Result<Boolean> {
         return try {
             postOptionList(optionList)
             Result.success(true)
@@ -150,7 +160,7 @@ class MenuRepositoryImpl @Inject constructor() : MenuRepository {
         }
     }
 
-    private suspend fun postOptionList(optionList: List<String>) {
+    private suspend fun postOptionList(optionList: List<OptionType>) {
         withContext(Dispatchers.IO) {
             optionList.forEach {
                 orderMenuOptionList.add(it)
@@ -175,7 +185,9 @@ class MenuRepositoryImpl @Inject constructor() : MenuRepository {
 
     override suspend fun clearAll() = withContext(Dispatchers.IO) {
         menuList.clear()
-        orderMenuOptionList.clear()
+        orderMenuOptionList.clear().also {
+            Timber.d("clearAll() :: ${it}")
+        }
     }
 
     private fun createMenuId(): String = UUID.randomUUID().toString()

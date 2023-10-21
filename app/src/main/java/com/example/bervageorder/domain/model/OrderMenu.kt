@@ -4,7 +4,7 @@ import com.example.bervageorder.data.entity.OrderMenuEntity
 
 data class OrderMenu(
     val menu: Menu = Menu(),
-    val optionList: List<String> = emptyList()
+    val optionList: List<OptionType> = emptyList()
 ) {
     companion object {
         operator fun invoke(orderMenuEntity: OrderMenuEntity): OrderMenu {

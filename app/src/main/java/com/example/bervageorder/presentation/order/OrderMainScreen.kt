@@ -1,35 +1,25 @@
 package com.example.bervageorder.presentation.order
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.example.bervageorder.R
-import com.example.bervageorder.domain.model.Menu
-import com.example.bervageorder.presentation.common.button.BottomButton
-import com.example.bervageorder.presentation.common.button.BottomButtonState
+import com.example.bervageorder.presentation.common.error.ErrorScreen
+import com.example.bervageorder.presentation.common.loading.LoadingScreen
 import com.example.bervageorder.presentation.common.topbar.BeverageOrderTopAppBar
 import com.example.bervageorder.presentation.common.topbar.BeverageOrderTopAppBarState
+import com.example.bervageorder.presentation.order.state.OrderUiState
+import timber.log.Timber
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun OrderMainScreen(
     modifier: Modifier = Modifier,
-    viewModel: OrderViewModel,
+    viewModel: OrderViewModel = hiltViewModel(),
     navigateUp: () -> Unit,
     navigateToIntro: () -> Unit
 ) {
@@ -38,61 +28,28 @@ fun OrderMainScreen(
         topBar = {
             BeverageOrderTopAppBar(
                 state = BeverageOrderTopAppBarState.OrderTitle,
-                navigateUp = navigateUp
+                navigateUp = {
+                    Timber.d("onClick NavigateUp()")
+                    navigateUp()
+                }
             )
         },
     ) { paddingValues ->
-        OrderContent(
-            modifier = modifier.padding(paddingValues),
-            menu = uiState.menu,
-            optionList = uiState.optionListString,
-            navigateToIntro = navigateToIntro
-        )
-    }
-}
-
-@Composable
-private fun OrderContent(
-    modifier: Modifier = Modifier,
-    menu: Menu?,
-    optionList: String,
-    navigateToIntro: () -> Unit
-) {
-    if (menu != null) {
-        Column(
-            modifier = modifier
-                .padding(horizontal = 16.dp, vertical = 32.dp)
-                .fillMaxSize(),
-            verticalArrangement = Arrangement.SpaceBetween
-        ) {
-            Row(
-                modifier = modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Column(
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    Text(
-                        text = menu.name,
-                        style = MaterialTheme.typography.bodyLarge
-                    )
-                    Text(
-                        text = optionList,
-                        style = MaterialTheme.typography.bodyLarge
-                    )
-                }
-
-                Text(
-                    text = menu.price,
-                    style = MaterialTheme.typography.headlineMedium
+        when(uiState) {
+            is OrderUiState.None -> {}
+            is OrderUiState.Loading -> { LoadingScreen() }
+            is OrderUiState.Success -> {
+                OrderScreen(
+                    modifier = modifier.padding(paddingValues),
+                    menu = (uiState as OrderUiState.Success).menu,
+                    optionList = (uiState as OrderUiState.Success).optionListString,
+                    navigateToIntro = {
+                        viewModel.clearAll()
+                        navigateToIntro()
+                    }
                 )
             }
-
-            BottomButton(
-                bottomButtonState = BottomButtonState.Close,
-                onClick = navigateToIntro
-            )
+            is OrderUiState.Error -> { ErrorScreen(messageId = (uiState as OrderUiState.Error).errorMessage)}
         }
     }
 }

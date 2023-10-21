@@ -9,11 +9,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.bervageorder.presentation.common.error.ErrorScreen
+import com.example.bervageorder.presentation.common.loading.LoadingScreen
 import com.example.bervageorder.presentation.common.topbar.BeverageOrderTopAppBar
 import com.example.bervageorder.presentation.common.topbar.BeverageOrderTopAppBarState
-import com.example.bervageorder.presentation.menulist.state.ErrorScreen
-import com.example.bervageorder.presentation.menulist.state.LoadingScreen
-import com.example.bervageorder.presentation.menulist.state.MenuList
+import com.example.bervageorder.presentation.menulist.state.MenuListUiState
 
 /**
  *  1. 선언형 프로그래밍 -> What

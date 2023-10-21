@@ -3,11 +3,12 @@ package com.example.bervageorder.presentation.menudetail
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.bervageorder.navigation.BeverageOrderDestinationArg
+import com.example.bervageorder.R
+import com.example.bervageorder.domain.model.OptionType
 import com.example.bervageorder.domain.usecase.GetMenuUseCase
 import com.example.bervageorder.domain.usecase.SetOptionListUseCase
+import com.example.bervageorder.navigation.BeverageOrderDestinationArg
 import com.example.bervageorder.presentation.menudetail.state.MenuDetailUiState
-import com.example.bervageorder.presentation.menudetail.state.OptionType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -30,10 +31,9 @@ class MenuDetailViewModel @Inject constructor(
     val menuId: String =
         savedStateHandle.get<String>(BeverageOrderDestinationArg.MENU_ID_ARG).orEmpty()
 
-    private val selectedOptionMap: MutableMap<Int, String> = mutableMapOf()
+    private val selectedOptionMap: MutableMap<Int, OptionType> = mutableMapOf()
 
     init {
-        Timber.d("Current Menu :: ${menuId}")
         getCurrentMenu()
     }
 
@@ -51,14 +51,14 @@ class MenuDetailViewModel @Inject constructor(
                 }
                 .onFailure {
                     Timber.w("getCurrentMenu() ERROR :: ${it.message}")
-                    _uiState.update { MenuDetailUiState.Error }
+                    _uiState.update { MenuDetailUiState.Error(messageId = R.string.title_error_message) }
                 }
         }
     }
 
     fun addOption(optionId: Int, option: OptionType) {
         Timber.d("selectedOption() :: ${optionId} / ${option}")
-        selectedOptionMap[optionId] = option.name
+        selectedOptionMap[optionId] = option
     }
 
     fun clearOption() {
@@ -70,7 +70,7 @@ class MenuDetailViewModel @Inject constructor(
         viewModelScope.launch {
             val optionList = selectedOptionMap.toMap().toList().map { it.second }
             setOptionListUseCase.setOptionList(menuId, optionList)
-                .onSuccess { result ->
+                .onSuccess {
                     _uiState.update { MenuDetailUiState.AllOptionSelected }
                 }
                 .onFailure {

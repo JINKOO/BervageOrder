@@ -31,11 +31,13 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.bervageorder.R
+import com.example.bervageorder.domain.model.OptionType
+import com.example.bervageorder.presentation.common.error.ErrorScreen
+import com.example.bervageorder.presentation.common.loading.LoadingScreen
 import com.example.bervageorder.presentation.common.topbar.BeverageOrderTopAppBar
 import com.example.bervageorder.presentation.common.topbar.BeverageOrderTopAppBarState
 import com.example.bervageorder.presentation.menudetail.state.MenuDetailUiState
 import com.example.bervageorder.presentation.menudetail.state.MenuOptionState
-import com.example.bervageorder.presentation.menudetail.state.OptionType
 import com.example.bervageorder.presentation.menudetail.state.getOptionStringResId
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -63,7 +65,7 @@ fun MenuDetailMainScreen(
         var isShowIceQuantityOption by rememberSaveable { mutableStateOf(false) }
         when(uiState) {
             is MenuDetailUiState.None -> {}
-            is MenuDetailUiState.Loading -> {}
+            is MenuDetailUiState.Loading -> { LoadingScreen() }
             is MenuDetailUiState.Success -> {
                 MenuDetailScreen(
                     modifier = modifier.padding(paddingValues = paddingValues),
@@ -75,7 +77,7 @@ fun MenuDetailMainScreen(
                 )
             }
             is MenuDetailUiState.AllOptionSelected -> { navigateToOrder(viewModel.menuId) }
-            is MenuDetailUiState.Error -> {}
+            is MenuDetailUiState.Error -> { ErrorScreen(messageId = (uiState as MenuDetailUiState.Error).messageId)}
         }
     }
 }

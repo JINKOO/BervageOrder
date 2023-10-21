@@ -1,4 +1,4 @@
-package com.example.bervageorder.presentation.intro
+package com.example.bervageorder.presentation.intro.state
 
 import androidx.annotation.StringRes
 
