@@ -1,5 +1,6 @@
 package com.example.bervageorder.presentation.menudetail.state
 
+import androidx.annotation.StringRes
 import com.example.bervageorder.domain.model.Menu
 
 sealed class MenuDetailUiState {
@@ -12,7 +13,7 @@ sealed class MenuDetailUiState {
     ): MenuDetailUiState()
 
     data class Error(
-        val messageId: Int,
+        @StringRes val messageId: Int,
     ): MenuDetailUiState()
 
     object AllOptionSelected: MenuDetailUiState()

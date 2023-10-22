@@ -8,6 +8,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.bervageorder.presentation.common.error.ErrorScreen
+import com.example.bervageorder.presentation.common.loading.LoadingScreen
 import com.example.bervageorder.presentation.common.topbar.BeverageOrderTopAppBar
 import com.example.bervageorder.presentation.common.topbar.BeverageOrderTopAppBarState
 import com.example.bervageorder.presentation.intro.state.IntroUiState
@@ -35,7 +37,7 @@ fun IntroMainScreen(
     ) { paddingValues ->
         when(uiState) {
             is IntroUiState.None -> {}
-            is IntroUiState.Loading -> {}
+            is IntroUiState.Loading -> { LoadingScreen() }
             is IntroUiState.Success -> {
                 IntroScreen(
                     modifier = modifier.padding(paddingValues = paddingValues),
@@ -43,7 +45,7 @@ fun IntroMainScreen(
                     navigateToMenuList = navigateToMenuList
                 )
             }
-            is IntroUiState.Error -> {}
+            is IntroUiState.Error -> { }
         }
     }
 }

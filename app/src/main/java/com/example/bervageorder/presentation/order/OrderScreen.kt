@@ -24,7 +24,7 @@ fun OrderScreen(
     optionList: String,
     navigateToIntro: () -> Unit
 ) {
-    // TODO 2회차 질문 :: 59번째 줄에서 Menu를 Nullable로 받는데, Composable내에서 64번째 처럼 처리해도 되는지?
+    // TODO 2회차 질문 :: 23번째 줄에서 Menu를 Nullable로 받는데, Composable내에서 29번째 처럼 처리해도 되는지?
     //  아니면 애초에 Domain에서 Model을 넘길때, NonNull타입으로 넘겨야하는지?
     if (menu == null) return
     Column(

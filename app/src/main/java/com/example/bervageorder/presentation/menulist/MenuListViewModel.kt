@@ -37,7 +37,8 @@ class MenuListViewModel @Inject constructor(
     val uiState: StateFlow<MenuListUiState> = _uiState.asStateFlow()
 
     init {
-        getMenuList()
+//        getMenuList()
+        getMenuListFlow()
     }
 
     /**
@@ -45,20 +46,20 @@ class MenuListViewModel @Inject constructor(
      *   ViewModel은 말 그대로 View에 대한 Model이다.
      *   따라서, View에 필요한 data들만 가공하는 역할을 하도록 수정한다.
      */
-    private fun getMenuList() {
-        _uiState.update { MenuListUiState.Loading }
-        viewModelScope.launch {
-            getMenuListUseCase.getMenuList()
-                .onSuccess { menuList ->
-                    Timber.d("initMenuList() :: ${menuList.size}")
-                    _uiState.update { MenuListUiState.Success(menuList.groupBy { it.type }) }
-                }
-                .onFailure {
-                    Timber.w("initMenuList() ERROR :: ${it.message}")
-                    _uiState.update { MenuListUiState.Error(errorMessage = R.string.title_error_message) }
-                }
-        }
-    }
+//    private fun getMenuList() {
+//        _uiState.update { MenuListUiState.Loading }
+//        viewModelScope.launch {
+//            getMenuListUseCase.getMenuList()
+//                .onSuccess { menuList ->
+//                    Timber.d("initMenuList() :: ${menuList.size}")
+//                    _uiState.update { MenuListUiState.Success(menuList.groupBy { it.type }) }
+//                }
+//                .onFailure {
+//                    Timber.w("initMenuList() ERROR :: ${it.message}")
+//                    _uiState.update { MenuListUiState.Error(errorMessage = R.string.title_error_message) }
+//                }
+//        }
+//    }
 
     private fun getMenuListFlow() {
         // TODO 2회차 질문 :: launchIn을 사용할 때, 본 함수를 suspend로 만들어야하는지?
