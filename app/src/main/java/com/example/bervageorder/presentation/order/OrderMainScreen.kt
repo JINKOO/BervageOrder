@@ -44,6 +44,7 @@ fun OrderMainScreen(
                     menu = (uiState as OrderUiState.Success).menu,
                     optionList = (uiState as OrderUiState.Success).optionListString,
                     navigateToIntro = {
+                        // TODO 질문 2회차 :: Repository에서 Dispatcher IO 수행 완료 후, 화면 이동 방법.완료되었다는 상태를 갖고, 이 상태가 true인 경우에만 navigate()
                         viewModel.clearAll()
                         navigateToIntro()
                     }
