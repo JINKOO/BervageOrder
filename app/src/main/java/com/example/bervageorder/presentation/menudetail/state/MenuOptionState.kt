@@ -11,65 +11,73 @@ sealed class MenuOptionState(
     @ColorRes val selectedTextColor: Color,
     @ColorRes val unSelectedTextColor: Color,
     @ColorRes val selectedBackGroundColor: Color,
-    @ColorRes val unSelectedBackGroundColor: Color
+    @ColorRes val unSelectedBackGroundColor: Color,
 ) {
     object Hot : MenuOptionState(
         type = OptionType.HOT,
         selectedTextColor = Color.White,
         unSelectedTextColor = Color.Black,
         selectedBackGroundColor = Color.DarkGray,
-        unSelectedBackGroundColor = Color.LightGray
+        unSelectedBackGroundColor = Color.LightGray,
     )
+
     object Ice : MenuOptionState(
         type = OptionType.ICE,
         selectedTextColor = Color.White,
         unSelectedTextColor = Color.Black,
         selectedBackGroundColor = Color.DarkGray,
-        unSelectedBackGroundColor = Color.LightGray
+        unSelectedBackGroundColor = Color.LightGray,
     )
-    object Caffeine: MenuOptionState(
+
+    object Caffeine : MenuOptionState(
         type = OptionType.CAFFEINE,
         selectedTextColor = Color.White,
         unSelectedTextColor = Color.Black,
         selectedBackGroundColor = Color.DarkGray,
-        unSelectedBackGroundColor = Color.LightGray
+        unSelectedBackGroundColor = Color.LightGray,
     )
-    object DeCaffeine: MenuOptionState(
+
+    object DeCaffeine : MenuOptionState(
         type = OptionType.DE_CAFFEINE,
         selectedTextColor = Color.White,
         unSelectedTextColor = Color.Black,
         selectedBackGroundColor = Color.DarkGray,
-        unSelectedBackGroundColor = Color.LightGray
+        unSelectedBackGroundColor = Color.LightGray,
     )
-    object LessIce: MenuOptionState(
+
+    object LessIce : MenuOptionState(
         type = OptionType.ICE_LESS,
         selectedTextColor = Color.White,
         unSelectedTextColor = Color.Black,
         selectedBackGroundColor = Color.DarkGray,
-        unSelectedBackGroundColor = Color.LightGray
+        unSelectedBackGroundColor = Color.LightGray,
     )
-    object NormalIce: MenuOptionState(
+
+    object NormalIce : MenuOptionState(
         type = OptionType.ICE_NORMAL,
         selectedTextColor = Color.White,
         unSelectedTextColor = Color.Black,
         selectedBackGroundColor = Color.DarkGray,
-        unSelectedBackGroundColor = Color.LightGray
+        unSelectedBackGroundColor = Color.LightGray,
     )
-    object MoreIce: MenuOptionState(
+
+    object MoreIce : MenuOptionState(
         type = OptionType.ICE_MORE,
         selectedTextColor = Color.White,
         unSelectedTextColor = Color.Black,
         selectedBackGroundColor = Color.DarkGray,
-        unSelectedBackGroundColor = Color.LightGray
+        unSelectedBackGroundColor = Color.LightGray,
     )
 
     companion object {
         fun getDefaultOptionList(): List<MenuOptionState> {
             return listOf(Hot, Ice)
         }
+
         fun getCaffeineOptionList(): List<MenuOptionState> {
             return listOf(DeCaffeine, Caffeine)
         }
+
         fun getIceQuantityOptionList(): List<MenuOptionState> {
             return listOf(LessIce, NormalIce, MoreIce)
         }
@@ -78,7 +86,7 @@ sealed class MenuOptionState(
 
 @Composable
 fun MenuOptionState.getOptionStringResId(): Int {
-    return when(type) {
+    return when (type) {
         OptionType.HOT -> R.string.button_hot
         OptionType.ICE -> R.string.button_ice
         OptionType.CAFFEINE -> R.string.button_caffeine

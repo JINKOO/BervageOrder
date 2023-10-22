@@ -10,8 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.bervageorder.domain.model.Menu
 import com.example.bervageorder.domain.model.OptionType
-import com.example.bervageorder.presentation.common.button.BottomButton
-import com.example.bervageorder.presentation.common.button.BottomButtonState
+import com.example.bervageorder.presentation.common.button.NextBottomButton
 
 @Composable
 fun MenuDetailScreen(
@@ -20,25 +19,24 @@ fun MenuDetailScreen(
     isShowIceQuantityOption: Boolean,
     onClickIceOption: (Boolean) -> Unit,
     onClickOption: (Int, OptionType) -> Unit,
-    onClickNext: () -> Unit
+    onClickNext: () -> Unit,
 ) {
     if (menu == null) return
     Column(
         modifier = modifier
             .padding(16.dp)
             .fillMaxSize(),
-        verticalArrangement = Arrangement.SpaceBetween
+        verticalArrangement = Arrangement.SpaceBetween,
     ) {
         MenuOptionsColumn(
             menu = menu,
             isShowIceQuantityOption = isShowIceQuantityOption,
             onClickIceOption = onClickIceOption,
-            onClickOption = onClickOption
+            onClickOption = onClickOption,
         )
 
-        BottomButton(
-            bottomButtonState = BottomButtonState.Next,
-            onClick = onClickNext
+        NextBottomButton(
+            onClick = onClickNext,
         )
     }
 }
@@ -49,29 +47,29 @@ private fun MenuOptionsColumn(
     menu: Menu,
     onClickIceOption: (Boolean) -> Unit,
     isShowIceQuantityOption: Boolean,
-    onClickOption: (Int, OptionType) -> Unit
+    onClickOption: (Int, OptionType) -> Unit,
 ) {
     Column(
-        modifier = modifier
+        modifier = modifier,
     ) {
         // 선택한 메뉴 명
         HeaderTitle(
             modifier = Modifier.fillMaxWidth(),
             name = menu.name,
-            price = menu.priceFormatString
+            price = menu.priceFormatString,
         )
         if (menu.isDefaultOption) {
             IceOptionRow(
                 modifier = Modifier.padding(top = 32.dp),
                 onClickIceOption = onClickIceOption,
-                onClickOption = onClickOption
+                onClickOption = onClickOption,
             )
         }
 
         if (menu.isCaffeine) {
             CaffeineOptionRow(
                 modifier = Modifier.padding(top = 32.dp),
-                onClickOption = onClickOption
+                onClickOption = onClickOption,
             )
         }
 
@@ -79,7 +77,7 @@ private fun MenuOptionsColumn(
         if (menu.isIceQuantity && isShowIceQuantityOption) {
             IceQuantityOptionRow(
                 modifier = Modifier.padding(top = 32.dp),
-                onClickOption = onClickOption
+                onClickOption = onClickOption,
             )
         }
     }

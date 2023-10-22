@@ -5,5 +5,5 @@ import kotlinx.coroutines.flow.Flow
 
 interface GetMenuListUseCase {
     suspend fun getMenuList(): Result<List<Menu>>
-    suspend fun getMenuListFlow(): Flow<List<Menu>>
+    fun getMenuListFlow(): Flow<List<Menu>>
 }

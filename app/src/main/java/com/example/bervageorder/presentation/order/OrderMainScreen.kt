@@ -21,7 +21,7 @@ fun OrderMainScreen(
     modifier: Modifier = Modifier,
     viewModel: OrderViewModel = hiltViewModel(),
     navigateUp: () -> Unit,
-    navigateToIntro: () -> Unit
+    navigateToIntro: () -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     Scaffold(
@@ -31,13 +31,16 @@ fun OrderMainScreen(
                 navigateUp = {
                     Timber.d("onClick NavigateUp()")
                     navigateUp()
-                }
+                },
             )
         },
     ) { paddingValues ->
-        when(uiState) {
+        when (uiState) {
             is OrderUiState.None -> {}
-            is OrderUiState.Loading -> { LoadingScreen() }
+            is OrderUiState.Loading -> {
+                LoadingScreen()
+            }
+
             is OrderUiState.Success -> {
                 OrderScreen(
                     modifier = modifier.padding(paddingValues),
@@ -46,11 +49,14 @@ fun OrderMainScreen(
                     navigateToIntro = {
                         // TODO 질문 2회차 :: Repository에서 Dispatcher IO 수행 완료 후, 화면 이동 방법.완료되었다는 상태를 갖고, 이 상태가 true인 경우에만 navigate()
                         viewModel.clearAll()
-                        navigateToIntro()
-                    }
+                        // navigateToIntro()
+                    },
                 )
             }
-            is OrderUiState.Error -> { ErrorScreen(messageId = (uiState as OrderUiState.Error).errorMessage)}
+
+            is OrderUiState.Error -> {
+                ErrorScreen(messageId = (uiState as OrderUiState.Error).errorMessage)
+            }
         }
     }
 }

@@ -2,23 +2,18 @@ package com.example.bervageorder.presentation.menulist
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.bervageorder.R
 import com.example.bervageorder.domain.usecase.GetMenuListUseCase
 import com.example.bervageorder.presentation.menulist.state.MenuListUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -30,7 +25,7 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class MenuListViewModel @Inject constructor(
-    private val getMenuListUseCase: GetMenuListUseCase
+    private val getMenuListUseCase: GetMenuListUseCase,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow<MenuListUiState>(MenuListUiState.None)
@@ -63,28 +58,33 @@ class MenuListViewModel @Inject constructor(
 
     private fun getMenuListFlow() {
         // TODO 2회차 질문 :: launchIn을 사용할 때, 본 함수를 suspend로 만들어야하는지?
-//        getMenuListUseCase.getMenuListFlow()
-//            .onEach {menuList ->
-//                Timber.d("$menuList")
-//                _uiState.update { MenuListUiState.Success(menuMap = menuList.groupBy { it.type }) }
-//            }
-//            .onCompletion {
-//                Timber.d("onCompletion")
-//            }
-//            .catch {
-//                Timber.d("ERROR ${it.message}")
-//            }
-//            .launchIn(viewModelScope)
-//    }
-        viewModelScope.launch {
-            getMenuListUseCase.getMenuListFlow()
-                .catch {
-                    Timber.e("${it.message}")
-                    _uiState.update { MenuListUiState.Error(errorMessage = R.string.title_error_message) }
-                }
-                .collectLatest { menuList ->
-                    _uiState.update { MenuListUiState.Success(menuMap = menuList.groupBy { it.type }) }
-                }
-        }
+        getMenuListUseCase.getMenuListFlow()
+            .onEach { menuList ->
+                Timber.d("$menuList")
+                _uiState.update { MenuListUiState.Success(menuMap = menuList.groupBy { it.type }) }
+            }
+            .onStart {
+                Timber.d("onStart")
+                _uiState.update { MenuListUiState.Loading }
+            }
+            .onCompletion {
+                Timber.d("onCompletion")
+            }
+            .catch {
+                Timber.d("ERROR ${it.message}")
+            }
+            .launchIn(viewModelScope)
     }
 }
+//        viewModelScope.launch {
+//            getMenuListUseCase.getMenuListFlow()
+//                .catch {
+//                    Timber.e("${it.message}")
+//                    _uiState.update { MenuListUiState.Error(errorMessage = R.string.title_error_message) }
+//                }
+//                .collectLatest { menuList ->
+//                    _uiState.update { MenuListUiState.Success(menuMap = menuList.groupBy { it.type }) }
+//                }
+//        }
+//    }
+// }

@@ -15,7 +15,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import timber.log.Timber
-import java.lang.StringBuilder
 import javax.inject.Inject
 
 @HiltViewModel
@@ -36,13 +35,15 @@ class OrderViewModel @Inject constructor(
 
     private fun getOrderMenu() {
         viewModelScope.launch {
-            Timber.i("getOrderMenu() :: ${menuId}")
+            Timber.i("getOrderMenu() :: $menuId")
             getOrderMenuUseCase.getOrderMenu(menuId = menuId)
                 .onSuccess { orderMenu ->
-                    _uiState.update { OrderUiState.Success(
-                        menu = orderMenu.menu,
-                        optionListString = formatOptionListToString(orderMenu.optionList)
-                    ) }
+                    _uiState.update {
+                        OrderUiState.Success(
+                            menu = orderMenu.menu,
+                            optionListString = formatOptionListToString(orderMenu.optionList),
+                        )
+                    }
                 }
                 .onFailure {
                     Timber.w("getOrderMenu() ERROR :: ${it.message}")
@@ -65,7 +66,23 @@ class OrderViewModel @Inject constructor(
 
     fun clearAll() {
         viewModelScope.launch {
-            menuRepository.clearAll()
+            runCatching { menuRepository.clearAll() }
+                .fold(
+                    onSuccess = {
+                        Result.success(Unit)
+                    },
+                    onFailure = {
+                        Result.failure(it)
+                    },
+                )
+                .onSuccess {
+                }
+                .onFailure {
+                }
         }
+    }
+
+    fun foo(unit: Unit) {
+        Timber.i("foo() :: $unit")
     }
 }

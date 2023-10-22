@@ -16,13 +16,12 @@ import com.example.bervageorder.domain.model.Menu
 import com.example.bervageorder.presentation.common.button.BottomButton
 import com.example.bervageorder.presentation.common.button.BottomButtonState
 
-
 @Composable
 fun OrderScreen(
     modifier: Modifier = Modifier,
     menu: Menu?,
     optionList: String,
-    navigateToIntro: () -> Unit
+    navigateToIntro: () -> Unit,
 ) {
     // TODO 2회차 질문 :: 23번째 줄에서 Menu를 Nullable로 받는데, Composable내에서 29번째 처럼 처리해도 되는지?
     //  아니면 애초에 Domain에서 Model을 넘길때, NonNull타입으로 넘겨야하는지?
@@ -31,36 +30,36 @@ fun OrderScreen(
         modifier = modifier
             .padding(horizontal = 16.dp, vertical = 32.dp)
             .fillMaxSize(),
-        verticalArrangement = Arrangement.SpaceBetween
+        verticalArrangement = Arrangement.SpaceBetween,
     ) {
         Row(
             modifier = modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Column(
                 modifier = Modifier.weight(1f),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
+                verticalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 Text(
                     text = menu.name,
-                    style = MaterialTheme.typography.bodyLarge
+                    style = MaterialTheme.typography.bodyLarge,
                 )
                 Text(
                     text = optionList,
-                    style = MaterialTheme.typography.bodyLarge
+                    style = MaterialTheme.typography.bodyLarge,
                 )
             }
 
             Text(
                 text = menu.priceFormatString,
-                style = MaterialTheme.typography.headlineMedium
+                style = MaterialTheme.typography.headlineMedium,
             )
         }
 
         BottomButton(
             bottomButtonState = BottomButtonState.Close,
-            onClick = navigateToIntro
+            onClick = navigateToIntro,
         )
     }
 }

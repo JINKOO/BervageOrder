@@ -7,16 +7,11 @@ import com.example.bervageorder.data.repository.MenuRepository
 import com.example.bervageorder.domain.model.Menu
 import com.example.bervageorder.domain.model.OptionType
 import com.example.bervageorder.domain.model.OrderMenu
-import com.example.bervageorder.presentation.menulist.MenuList
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.withContext
 import timber.log.Timber
-import java.lang.NullPointerException
 import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -46,18 +41,18 @@ class MenuRepositoryImpl @Inject constructor() : MenuRepository {
         }.onSuccess {
             Timber.d("getMenuList() SUCCESS :: ${menuList.size}")
             it.forEach { menu -> menuList.add(menu) }.also {
-                Timber.d("getMenuList() END :: ${menuList.size} / ${menuList}")
+                Timber.d("getMenuList() END :: ${menuList.size} / $menuList")
             }
         }.onFailure {
             Timber.w("getMenuList() ERROR :: ${it.message}")
         }
 
     override suspend fun getMenuById(menuId: String): Result<Menu?> = runCatching {
-        Timber.d("getMenuById() menuList :: ${menuList}")
+        Timber.d("getMenuById() menuList :: $menuList")
         // TODO 2회차 질문 :: find는 해당 조건에 없다면 null을 반환하는데, 이때, Null 처리를 어떻게 하면 되는지? Null인 경우, 빈 객체로 정의?
         menuList.find { it.id == menuId } // ?: Menu()
     }.onSuccess {
-        Timber.d("getMenuById() SUCCESS :: ${it}")
+        Timber.d("getMenuById() SUCCESS :: $it")
     }.onFailure {
         Timber.w("getMenuById() ERROR :: ${it.message}")
     }
@@ -71,7 +66,7 @@ class MenuRepositoryImpl @Inject constructor() : MenuRepository {
                     name = "아메리카노",
                     temperature = TemperatureType.BOTH,
                     price = 1_000,
-                    isCaffeine = true
+                    isCaffeine = true,
                 ),
                 MenuEntity(
                     id = createMenuId(),
@@ -79,7 +74,7 @@ class MenuRepositoryImpl @Inject constructor() : MenuRepository {
                     name = "카페라떼",
                     temperature = TemperatureType.BOTH,
                     price = 1_500,
-                    isCaffeine = true
+                    isCaffeine = true,
                 ),
                 MenuEntity(
                     id = createMenuId(),
@@ -87,7 +82,7 @@ class MenuRepositoryImpl @Inject constructor() : MenuRepository {
                     name = "카푸치노",
                     temperature = TemperatureType.BOTH,
                     price = 2_000,
-                    isCaffeine = true
+                    isCaffeine = true,
                 ),
                 MenuEntity(
                     id = createMenuId(),
@@ -95,7 +90,7 @@ class MenuRepositoryImpl @Inject constructor() : MenuRepository {
                     name = "오렌지에이드",
                     temperature = TemperatureType.ICE,
                     price = 2_500,
-                    isCaffeine = false
+                    isCaffeine = false,
                 ),
                 MenuEntity(
                     id = createMenuId(),
@@ -103,7 +98,7 @@ class MenuRepositoryImpl @Inject constructor() : MenuRepository {
                     name = "망고에이드",
                     temperature = TemperatureType.ICE,
                     price = 2_500,
-                    isCaffeine = false
+                    isCaffeine = false,
                 ),
                 MenuEntity(
                     id = createMenuId(),
@@ -111,7 +106,7 @@ class MenuRepositoryImpl @Inject constructor() : MenuRepository {
                     name = "얼그레이티",
                     temperature = TemperatureType.HOT,
                     price = 1_000,
-                    isCaffeine = true
+                    isCaffeine = true,
                 ),
                 MenuEntity(
                     id = createMenuId(),
@@ -119,7 +114,7 @@ class MenuRepositoryImpl @Inject constructor() : MenuRepository {
                     name = "페퍼민트티",
                     temperature = TemperatureType.HOT,
                     price = 2_500,
-                    isCaffeine = true
+                    isCaffeine = true,
                 ),
                 MenuEntity(
                     id = createMenuId(),
@@ -127,7 +122,7 @@ class MenuRepositoryImpl @Inject constructor() : MenuRepository {
                     name = "치즈케이크",
                     temperature = TemperatureType.NONE,
                     price = 3_000,
-                    isCaffeine = false
+                    isCaffeine = false,
                 ),
                 MenuEntity(
                     id = createMenuId(),
@@ -135,7 +130,7 @@ class MenuRepositoryImpl @Inject constructor() : MenuRepository {
                     name = "초코케이크",
                     temperature = TemperatureType.NONE,
                     price = 3_000,
-                    isCaffeine = false
+                    isCaffeine = false,
                 ),
                 MenuEntity(
                     id = createMenuId(),
@@ -143,7 +138,7 @@ class MenuRepositoryImpl @Inject constructor() : MenuRepository {
                     name = "마들렌",
                     temperature = TemperatureType.NONE,
                     price = 1_000,
-                    isCaffeine = false
+                    isCaffeine = false,
                 ),
                 MenuEntity(
                     id = createMenuId(),
@@ -151,12 +146,15 @@ class MenuRepositoryImpl @Inject constructor() : MenuRepository {
                     name = "휘낭시에",
                     temperature = TemperatureType.NONE,
                     price = 1_500,
-                    isCaffeine = false
-                )
+                    isCaffeine = false,
+                ),
             )
         }
 
-    override suspend fun setOptionList(menuId: String, optionList: List<OptionType>): Result<Boolean> {
+    override suspend fun setOptionList(
+        menuId: String,
+        optionList: List<OptionType>,
+    ): Result<Boolean> {
         return try {
             postOptionList(optionList)
             Result.success(true)
@@ -181,7 +179,7 @@ class MenuRepositoryImpl @Inject constructor() : MenuRepository {
             getMenuById(menuId = menuId).getOrNull() ?: throw NullPointerException("Menu Is Null!!")
         OrderMenu(menu = menu, optionList = orderMenuOptionList)
     }.onSuccess {
-        Timber.i("getOrderMenu() Success :: ${it} ")
+        Timber.i("getOrderMenu() Success :: $it ")
         Result.success(it)
     }.onFailure {
         Timber.w("getOrderMenu() ERROR :: ${it.message}")
@@ -191,7 +189,7 @@ class MenuRepositoryImpl @Inject constructor() : MenuRepository {
     override suspend fun clearAll() = withContext(Dispatchers.IO) {
         menuList.clear()
         orderMenuOptionList.clear().also {
-            Timber.d("clearAll() :: ${it}")
+            Timber.d("clearAll() :: $it")
         }
     }
 

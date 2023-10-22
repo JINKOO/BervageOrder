@@ -6,13 +6,13 @@ import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class GetMenuListUseCaseImpl @Inject constructor(
-    private val menuRepository: MenuRepository
+    private val menuRepository: MenuRepository,
 ) : GetMenuListUseCase {
     override suspend fun getMenuList(): Result<List<Menu>> {
         return menuRepository.getMenuList()
     }
 
-    override suspend fun getMenuListFlow(): Flow<List<Menu>> {
+    override fun getMenuListFlow(): Flow<List<Menu>> {
         return menuRepository.menuListFlow
     }
 }

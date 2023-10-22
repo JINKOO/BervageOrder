@@ -11,16 +11,16 @@ data class Menu(
     val name: String = "",
     val temperature: TemperatureType = TemperatureType.NONE,
     val price: Int = 0,
-    val isCaffeine: Boolean = false
+    val isCaffeine: Boolean = false,
 ) {
     val isDefaultOption: Boolean
-        get() = when(temperature) {
+        get() = when (temperature) {
             TemperatureType.ICE, TemperatureType.HOT, TemperatureType.BOTH -> true
             else -> false
         }
 
     val isIceQuantity: Boolean
-        get() = when(type) {
+        get() = when (type) {
             MenuType.COFFEE, MenuType.ADE -> true
             else -> false
         }
@@ -37,7 +37,7 @@ data class Menu(
                 name = menuEntity.name.orEmpty(),
                 temperature = menuEntity.temperature ?: TemperatureType.NONE,
                 price = menuEntity.price ?: 0,
-                isCaffeine = menuEntity.isCaffeine ?: false
+                isCaffeine = menuEntity.isCaffeine ?: false,
             )
         }
     }

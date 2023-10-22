@@ -22,10 +22,11 @@ import javax.inject.Inject
 class MenuDetailViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val getMenuUseCase: GetMenuUseCase,
-    private val setOptionListUseCase: SetOptionListUseCase
+    private val setOptionListUseCase: SetOptionListUseCase,
 ) : ViewModel() {
 
-    private val _uiState: MutableStateFlow<MenuDetailUiState> = MutableStateFlow(MenuDetailUiState.None)
+    private val _uiState: MutableStateFlow<MenuDetailUiState> =
+        MutableStateFlow(MenuDetailUiState.None)
     val uiState: StateFlow<MenuDetailUiState> = _uiState.asStateFlow()
 
     val menuId: String =
@@ -42,10 +43,10 @@ class MenuDetailViewModel @Inject constructor(
         viewModelScope.launch {
             getMenuUseCase.getMenuById(menuId = menuId)
                 .onSuccess { menu ->
-                    Timber.d("getCurrentMenu() result :: ${menu}")
+                    Timber.d("getCurrentMenu() result :: $menu")
                     _uiState.update {
                         MenuDetailUiState.Success(
-                            menu = menu
+                            menu = menu,
                         )
                     }
                 }
@@ -57,7 +58,7 @@ class MenuDetailViewModel @Inject constructor(
     }
 
     fun addOption(optionId: Int, option: OptionType) {
-        Timber.d("selectedOption() :: ${optionId} / ${option}")
+        Timber.d("selectedOption() :: $optionId / $option")
         selectedOptionMap[optionId] = option
     }
 

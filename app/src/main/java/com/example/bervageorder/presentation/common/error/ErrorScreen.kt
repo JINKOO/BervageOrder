@@ -1,6 +1,5 @@
 package com.example.bervageorder.presentation.common.error
 
-import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -19,21 +18,25 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun ErrorScreen(
     modifier: Modifier = Modifier,
-    @StringRes messageId: Int
+    error: ErrorState,
 ) {
     Column(
         modifier = modifier.fillMaxSize(),
         verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterVertically),
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Image(
             imageVector = Icons.Filled.Warning,
-            contentDescription = null
+            contentDescription = null,
         )
         Text(
-            text = stringResource(messageId),
+            text = stringResource(error.errorMessageId),
             textAlign = TextAlign.Center,
-            style = MaterialTheme.typography.bodyMedium
+            style = MaterialTheme.typography.bodyMedium,
         )
     }
+}
+
+interface ErrorState {
+    val errorMessageId: Int
 }

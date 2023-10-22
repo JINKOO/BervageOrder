@@ -21,24 +21,24 @@ abstract class UseCaseModule {
     @Singleton
     @Binds
     abstract fun bindGetMenuListUseCase(
-        getMenuListUseCaseImpl: GetMenuListUseCaseImpl
+        getMenuListUseCaseImpl: GetMenuListUseCaseImpl,
     ): GetMenuListUseCase
 
     @Singleton
     @Binds
     abstract fun bindGetMenuUseCase(
-        getMenuUseCaseImpl: GetMenuUseCaseImpl
+        getMenuUseCaseImpl: GetMenuUseCaseImpl,
     ): GetMenuUseCase
 
     @Singleton
     @Binds
     abstract fun bindSetOptionListUseCase(
-        setOptionListUseCaseImpl: SetOptionListUseCaseImpl
+        setOptionListUseCaseImpl: SetOptionListUseCaseImpl,
     ): SetOptionListUseCase
 
     @Singleton
     @Binds
     abstract fun bindGetOrderMenuUseCase(
-        getOrderMenuUseCaseImpl: GetOrderMenuUseCaseImpl
+        getOrderMenuUseCaseImpl: GetOrderMenuUseCaseImpl,
     ): GetOrderMenuUseCase
 }

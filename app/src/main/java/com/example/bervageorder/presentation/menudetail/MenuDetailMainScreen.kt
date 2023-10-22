@@ -46,7 +46,7 @@ fun MenuDetailMainScreen(
     modifier: Modifier = Modifier,
     viewModel: MenuDetailViewModel = hiltViewModel(),
     navigateUp: () -> Unit,
-    navigateToOrder: (String) -> Unit
+    navigateToOrder: (String) -> Unit,
 ) {
     val uiState: MenuDetailUiState by viewModel.uiState.collectAsStateWithLifecycle()
     Scaffold(
@@ -56,16 +56,19 @@ fun MenuDetailMainScreen(
                 navigateUp = {
                     navigateUp()
                     viewModel.clearOption()
-                }
+                },
             )
         },
     ) { paddingValues ->
         // TODO 2회차 질문 :: 얼음 선택 동적 노출 여부에 대한 상태값은
         //  ViewModel에서 처리하는게 맞는 건지, Composable에서 remeber변수를 사용한 상태값으로 처리해도 되는지,
         var isShowIceQuantityOption by rememberSaveable { mutableStateOf(false) }
-        when(uiState) {
+        when (uiState) {
             is MenuDetailUiState.None -> {}
-            is MenuDetailUiState.Loading -> { LoadingScreen() }
+            is MenuDetailUiState.Loading -> {
+                LoadingScreen()
+            }
+
             is MenuDetailUiState.Success -> {
                 MenuDetailScreen(
                     modifier = modifier.padding(paddingValues = paddingValues),
@@ -73,11 +76,17 @@ fun MenuDetailMainScreen(
                     onClickOption = { id, option -> viewModel.addOption(id, option) },
                     onClickIceOption = { isShowIceQuantityOption = it },
                     isShowIceQuantityOption = isShowIceQuantityOption,
-                    onClickNext = { viewModel.setSelectedOptions() }
+                    onClickNext = { viewModel.setSelectedOptions() },
                 )
             }
-            is MenuDetailUiState.AllOptionSelected -> { navigateToOrder(viewModel.menuId) }
-            is MenuDetailUiState.Error -> { ErrorScreen(messageId = (uiState as MenuDetailUiState.Error).messageId)}
+
+            is MenuDetailUiState.AllOptionSelected -> {
+                navigateToOrder(viewModel.menuId)
+            }
+
+            is MenuDetailUiState.Error -> {
+                ErrorScreen(messageId = (uiState as MenuDetailUiState.Error).messageId)
+            }
         }
     }
 }
@@ -86,19 +95,19 @@ fun MenuDetailMainScreen(
 fun HeaderTitle(
     modifier: Modifier = Modifier,
     name: String,
-    price: String
+    price: String,
 ) {
     Column(
         modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(8.dp)
+        verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         Text(
             text = name,
-            style = MaterialTheme.typography.bodyLarge
+            style = MaterialTheme.typography.bodyLarge,
         )
         Text(
             text = price,
-            style = MaterialTheme.typography.headlineMedium
+            style = MaterialTheme.typography.headlineMedium,
         )
     }
 }
@@ -107,15 +116,15 @@ fun HeaderTitle(
 fun IceOptionRow(
     modifier: Modifier = Modifier,
     onClickIceOption: (Boolean) -> Unit,
-    onClickOption: (Int, OptionType) -> Unit
+    onClickOption: (Int, OptionType) -> Unit,
 ) {
     Column(
         modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(8.dp)
+        verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         Text(
             text = stringResource(R.string.title_default_option),
-            style = MaterialTheme.typography.headlineMedium
+            style = MaterialTheme.typography.headlineMedium,
         )
         OptionButtonRow(
             optionList = MenuOptionState.getDefaultOptionList(),
@@ -126,7 +135,7 @@ fun IceOptionRow(
                     onClickIceOption(false)
                 }
                 onClickOption(0, it)
-            }
+            },
         )
     }
 }
@@ -134,19 +143,19 @@ fun IceOptionRow(
 @Composable
 fun CaffeineOptionRow(
     modifier: Modifier = Modifier,
-    onClickOption: (Int, OptionType) -> Unit
+    onClickOption: (Int, OptionType) -> Unit,
 ) {
     Column(
         modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(8.dp)
+        verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         Text(
             text = stringResource(R.string.title_decaffeine_option),
-            style = MaterialTheme.typography.headlineMedium
+            style = MaterialTheme.typography.headlineMedium,
         )
         OptionButtonRow(
             optionList = MenuOptionState.getCaffeineOptionList(),
-            onClickOption = { onClickOption(1, it) }
+            onClickOption = { onClickOption(1, it) },
         )
     }
 }
@@ -154,19 +163,19 @@ fun CaffeineOptionRow(
 @Composable
 fun IceQuantityOptionRow(
     modifier: Modifier = Modifier,
-    onClickOption: (Int, OptionType) -> Unit
+    onClickOption: (Int, OptionType) -> Unit,
 ) {
     Column(
         modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(8.dp)
+        verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         Text(
             text = stringResource(R.string.title_ice_option),
-            style = MaterialTheme.typography.headlineMedium
+            style = MaterialTheme.typography.headlineMedium,
         )
         OptionButtonRow(
             optionList = MenuOptionState.getIceQuantityOptionList(),
-            onClickOption = { onClickOption(2, it) }
+            onClickOption = { onClickOption(2, it) },
         )
     }
 }
@@ -175,7 +184,7 @@ fun IceQuantityOptionRow(
 fun OptionButtonRow(
     modifier: Modifier = Modifier,
     optionList: List<MenuOptionState> = emptyList(),
-    onClickOption: (OptionType) -> Unit
+    onClickOption: (OptionType) -> Unit,
 ) {
     var selectedOption by remember { mutableStateOf<MenuOptionState?>(null) }
     Column {
@@ -183,7 +192,7 @@ fun OptionButtonRow(
             modifier = modifier
                 .fillMaxWidth()
                 .selectableGroup(),
-            horizontalArrangement = Arrangement.spacedBy(4.dp)
+            horizontalArrangement = Arrangement.spacedBy(4.dp),
         ) {
             optionList.forEach { option ->
                 val isSelected = selectedOption == option
@@ -195,11 +204,13 @@ fun OptionButtonRow(
                             onClick = {
                                 selectedOption = option
                                 onClickOption(option.type)
-                            }
+                            },
                         ),
                     selectedOption = option,
-                    textColor =  selectedOption?.let { if (isSelected) it.selectedTextColor else it.unSelectedTextColor } ?: Color.Black,
-                    backgroundColor = selectedOption?.let { if (isSelected) it.selectedBackGroundColor else it.unSelectedBackGroundColor } ?: Color.LightGray
+                    textColor = selectedOption?.let { if (isSelected) it.selectedTextColor else it.unSelectedTextColor }
+                        ?: Color.Black,
+                    backgroundColor = selectedOption?.let { if (isSelected) it.selectedBackGroundColor else it.unSelectedBackGroundColor }
+                        ?: Color.LightGray,
                 )
             }
         }
@@ -211,19 +222,19 @@ fun TwoOptionItem(
     modifier: Modifier = Modifier,
     selectedOption: MenuOptionState,
     @ColorRes textColor: Color,
-    @ColorRes backgroundColor: Color
+    @ColorRes backgroundColor: Color,
 ) {
     Box(
         modifier = modifier
             .height(32.dp)
             .clip(RoundedCornerShape(24.dp))
             .background(backgroundColor),
-        contentAlignment = Alignment.Center
+        contentAlignment = Alignment.Center,
     ) {
         Text(
             text = stringResource(id = selectedOption.getOptionStringResId()),
             style = MaterialTheme.typography.bodyLarge,
-            color = textColor
+            color = textColor,
         )
     }
 }

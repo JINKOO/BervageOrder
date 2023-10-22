@@ -16,45 +16,45 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.example.bervageorder.data.entity.MenuType
 import com.example.bervageorder.domain.model.Menu
+import com.example.bervageorder.presentation.menulist.state.MenuListUiState
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun MenuList(
     modifier: Modifier = Modifier,
-    menuGrouped: Map<MenuType, List<Menu>> = emptyMap(),
-    navigateToOrderDetail: (String) -> Unit
+    uiState: MenuListUiState.Success,
+    navigateToOrderDetail: (String) -> Unit,
 ) {
     LazyColumn(
-        modifier = modifier
+        modifier = modifier,
     ) {
-        menuGrouped.forEach { (menuType, menuListByMenuType) ->
+        uiState.menuMap.forEach { (menuType, menuListByMenuType) ->
             stickyHeader {
                 MenuHeader(
                     menuType = menuType,
-                    color = Color.LightGray
+                    color = Color.LightGray,
                 )
             }
 
             items(menuListByMenuType) { menu ->
                 MenuItem(
                     menu = menu,
-                    navigateToOrderDetail =  { navigateToOrderDetail(menu.id) }
+                    navigateToOrderDetail = { navigateToOrderDetail(menu.id) },
                 )
             }
         }
     }
 }
 
-
 @Composable
 private fun MenuHeader(
     menuType: MenuType,
-    color: Color
+    color: Color,
 ) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .background(color)
+            .background(color),
     ) {
         Text(
             /**
@@ -62,7 +62,7 @@ private fun MenuHeader(
              */
             modifier = Modifier.padding(horizontal = 16.dp),
             text = menuType.name,
-            style = MaterialTheme.typography.headlineLarge
+            style = MaterialTheme.typography.headlineLarge,
         )
     }
 }
@@ -71,21 +71,21 @@ private fun MenuHeader(
 private fun MenuItem(
     modifier: Modifier = Modifier,
     menu: Menu,
-    navigateToOrderDetail: () -> Unit
+    navigateToOrderDetail: () -> Unit,
 ) {
     Column(
         modifier = modifier
             .padding(16.dp)
             .fillMaxWidth()
-            .clickable { navigateToOrderDetail() }
+            .clickable { navigateToOrderDetail() },
     ) {
         Text(
             text = menu.name,
-            style = MaterialTheme.typography.bodyLarge
+            style = MaterialTheme.typography.bodyLarge,
         )
         Text(
             text = menu.priceFormatString,
-            style = MaterialTheme.typography.bodyMedium
+            style = MaterialTheme.typography.bodyMedium,
         )
     }
 }

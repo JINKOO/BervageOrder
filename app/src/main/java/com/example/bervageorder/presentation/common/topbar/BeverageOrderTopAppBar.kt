@@ -16,22 +16,23 @@ import androidx.compose.ui.res.stringResource
 fun BeverageOrderTopAppBar(
     modifier: Modifier = Modifier,
     state: BeverageOrderTopAppBarState,
-    navigateUp: () -> Unit
+    navigateUp: () -> Unit,
 ) {
-    if (state.titleId == null) return
-    TopAppBar(
-        title = {
-            Text(
-                text = stringResource(state.getTitleId())
-            )
-        },
-        navigationIcon = {
-            IconButton(onClick = { navigateUp() }) {
-                Icon(
-                    imageVector = Icons.Filled.ArrowBack,
-                    contentDescription = null
+    if (state.isDisplay()) {
+        TopAppBar(
+            title = {
+                Text(
+                    text = stringResource(state.getTitleId()),
                 )
-            }
-        }
-    )
+            },
+            navigationIcon = {
+                IconButton(onClick = { navigateUp() }) {
+                    Icon(
+                        imageVector = Icons.Filled.ArrowBack,
+                        contentDescription = null,
+                    )
+                }
+            },
+        )
+    }
 }
