@@ -1,6 +1,5 @@
-package com.example.bervageorder.presentation.common
+package com.example.bervageorder.presentation.common.topbar
 
-import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -16,13 +15,14 @@ import androidx.compose.ui.res.stringResource
 @Composable
 fun BeverageOrderTopAppBar(
     modifier: Modifier = Modifier,
-    @StringRes titleId: Int,
+    state: BeverageOrderTopAppBarState,
     navigateUp: () -> Unit
 ) {
+    if (state.titleId == null) return
     TopAppBar(
         title = {
             Text(
-                text = stringResource(titleId)
+                text = stringResource(state.getTitleId())
             )
         },
         navigationIcon = {

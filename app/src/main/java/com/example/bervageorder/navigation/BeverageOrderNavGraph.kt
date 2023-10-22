@@ -22,11 +22,17 @@ import com.example.bervageorder.presentation.menudetail.MenuDetailMainScreen
 import com.example.bervageorder.presentation.menudetail.MenuDetailViewModel
 import com.example.bervageorder.presentation.order.OrderMainScreen
 import com.example.bervageorder.presentation.order.OrderViewModel
+import timber.log.Timber
 
-
+/**
+ *  XML 방식 VS Compose 방식
+ *  xml에서 최상위 layout에서의 match parent = Decorator View에서 실제 영역
+ *  modifier의 약할을 DecoratorView한다. 레이아웃 배치에 대한 내용이다.
+ *  xml : measure -> layout -> draw
+ *  modifier : measure / layout -> draw
+ */
 @Composable
 fun BeverageOrderNavGraph(
-    // TODO Composable에서 항상 Modifier를 default 파라미터 형식으로 정의해야 하는지
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController()
 ) {
@@ -47,14 +53,11 @@ fun BeverageOrderNavGraph(
         composable(
             route = BeverageOrderDestination.MENU_LIST_ROUTE
         ) {
-            val viewModel = hiltViewModel<MenuListViewModel>()
+            // 1개의 스크린당 1개의 viewModel ?? Compsoe에서는 그렇지 않아도된다.
+            // 여기서 viewModel을 저으이하는 것과, 최상위 Compose에서 정의하는 방식 생명주기가 다르다.
+//            val viewModel = hiltViewModel<MenuListViewModel>()
             MenuListMainScreen(
-                viewModel = viewModel,
-                navigateToOrderDetail = {
-                    navController.navigate(
-                        route = "$MENU_DETAIL_SCREEN/$it"
-                    )
-                },
+                navigateToOrderDetail = { navController.navigate(route = "$MENU_DETAIL_SCREEN/$it") },
                 navigateUp = { navController.navigateUp() }
             )
         }
@@ -65,9 +68,7 @@ fun BeverageOrderNavGraph(
                 navArgument(MENU_ID_ARG) { type = NavType.StringType }
             )
         ) {
-            val viewModel = hiltViewModel<MenuDetailViewModel>()
             MenuDetailMainScreen(
-                viewModel = viewModel,
                 navigateUp = { navController.navigateUp() },
                 navigateToOrder = { navController.navigate(route = "$MENU_ORDER_SCREEN/$it") }
             )
@@ -79,9 +80,7 @@ fun BeverageOrderNavGraph(
                 navArgument(MENU_ID_ARG) { type = NavType.StringType }
             )
         ) {
-            val viewModel = hiltViewModel<OrderViewModel>()
             OrderMainScreen(
-                viewModel = viewModel,
                 navigateUp = { navController.navigateUp() },
                 navigateToIntro = {
                     navController.navigate(BeverageOrderDestination.INTRO_ROUTE) {
