@@ -15,6 +15,7 @@ import androidx.compose.ui.unit.dp
 import com.example.bervageorder.domain.model.Menu
 import com.example.bervageorder.presentation.common.button.BottomButton
 import com.example.bervageorder.presentation.common.button.BottomButtonState
+import com.example.bervageorder.presentation.common.button.CloseBottomButton
 
 
 @Composable
@@ -58,9 +59,8 @@ fun OrderScreen(
             )
         }
 
-        BottomButton(
-            bottomButtonState = BottomButtonState.Close,
-            onClick = navigateToIntro
-        )
+        CloseBottomButton {
+            navigateToIntro()
+        }
     }
 }

@@ -62,6 +62,7 @@ fun MenuDetailMainScreen(
     ) { paddingValues ->
         // TODO 2회차 질문 :: 얼음 선택 동적 노출 여부에 대한 상태값은
         //  ViewModel에서 처리하는게 맞는 건지, Composable에서 remeber변수를 사용한 상태값으로 처리해도 되는지,
+        // 답변 :: 이 부분은 이번 과제에서 Modeling을 통해 진행 , 결론은 없어도 됨, Menu Model에서 Ice옵션이 있는지에 대한 로직, OrderModel에서 선택했는지에 대한 로직과 조합해서 보여주면 됨
         var isShowIceQuantityOption by rememberSaveable { mutableStateOf(false) }
         when(uiState) {
             is MenuDetailUiState.None -> {}
@@ -77,7 +78,7 @@ fun MenuDetailMainScreen(
                 )
             }
             is MenuDetailUiState.AllOptionSelected -> { navigateToOrder(viewModel.menuId) }
-            is MenuDetailUiState.Error -> { ErrorScreen(messageId = (uiState as MenuDetailUiState.Error).messageId)}
+            is MenuDetailUiState.Error -> { ErrorScreen(errorState = (uiState as MenuDetailUiState.Error))}
         }
     }
 }

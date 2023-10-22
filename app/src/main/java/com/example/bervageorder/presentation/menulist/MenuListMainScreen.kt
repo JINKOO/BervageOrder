@@ -55,6 +55,7 @@ fun MenuListMainScreen(
         //  예를 들어, 현재 Screen에 topAppBar존재, 그 밑에 tabRow가 있을때,
         //  로딩은 tabRow 밑에서 보여주고, 에러 스크린은 topBar를 노출한 채로 전체 Screen인 경우,
         //  코드랩 TODO App 처럼 ViewModel에서 combine으로 처리..??
+        // 답변 :: 이 경우에는 상태를 하위 Compose로 보낸다. uiState자체를 보내고, UiState를 더 세분화하게 나눈다.
         when(uiState) {
             is MenuListUiState.None -> {}
             is MenuListUiState.Loading -> {
@@ -63,14 +64,14 @@ fun MenuListMainScreen(
             is MenuListUiState.Error -> {
                 ErrorScreen(
                     modifier = modifier.padding(paddingValues = paddingValues),
-                    // TODO 2회차 질문 :: 여기서 형변환이 필요한 이유?
-                    messageId = (uiState as MenuListUiState.Error).errorMessage
+                    // TODO 2회차 질문 :: 여기서 형변환이 필요한 이유? // Kotlin 문제
+                    errorState = uiState as MenuListUiState.Error
                 )
             }
             is MenuListUiState.Success -> {
                 MenuList(
                     modifier = modifier.padding(paddingValues),
-                    menuGrouped = (uiState as MenuListUiState.Success).menuMap,
+                    uiState = uiState as MenuListUiState.Success,
                     navigateToOrderDetail = navigateToOrderDetail
                 )
             }

@@ -41,6 +41,7 @@ fun OrderMainScreen(
             is OrderUiState.Success -> {
                 OrderScreen(
                     modifier = modifier.padding(paddingValues),
+                    // state를 자체를 보낸다.
                     menu = (uiState as OrderUiState.Success).menu,
                     optionList = (uiState as OrderUiState.Success).optionListString,
                     navigateToIntro = {
@@ -50,7 +51,7 @@ fun OrderMainScreen(
                     }
                 )
             }
-            is OrderUiState.Error -> { ErrorScreen(messageId = (uiState as OrderUiState.Error).errorMessage)}
+            is OrderUiState.Error -> { ErrorScreen(errorState = uiState as OrderUiState.Error)}
         }
     }
 }

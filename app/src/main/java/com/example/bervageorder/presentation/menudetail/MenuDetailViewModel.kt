@@ -31,6 +31,7 @@ class MenuDetailViewModel @Inject constructor(
     val menuId: String =
         savedStateHandle.get<String>(BeverageOrderDestinationArg.MENU_ID_ARG).orEmpty()
 
+    //
     private val selectedOptionMap: MutableMap<Int, OptionType> = mutableMapOf()
 
     init {

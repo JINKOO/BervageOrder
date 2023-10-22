@@ -12,6 +12,7 @@ import com.example.bervageorder.domain.model.Menu
 import com.example.bervageorder.domain.model.OptionType
 import com.example.bervageorder.presentation.common.button.BottomButton
 import com.example.bervageorder.presentation.common.button.BottomButtonState
+import com.example.bervageorder.presentation.common.button.NextBottomButton
 
 @Composable
 fun MenuDetailScreen(
@@ -36,10 +37,7 @@ fun MenuDetailScreen(
             onClickOption = onClickOption
         )
 
-        BottomButton(
-            bottomButtonState = BottomButtonState.Next,
-            onClick = onClickNext
-        )
+        NextBottomButton { onClickNext() }
     }
 }
 

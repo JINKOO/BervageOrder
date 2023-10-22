@@ -2,6 +2,7 @@ package com.example.bervageorder.presentation.order.state
 
 import androidx.annotation.StringRes
 import com.example.bervageorder.domain.model.Menu
+import com.example.bervageorder.presentation.common.error.ErrorState
 
 sealed class OrderUiState {
     object None: OrderUiState()
@@ -15,5 +16,8 @@ sealed class OrderUiState {
 
     data class Error(
         @StringRes val errorMessage: Int
-    ) : OrderUiState()
+    ) : OrderUiState(), ErrorState {
+        override val errorMessageId: Int
+            get() = errorMessage
+    }
 }

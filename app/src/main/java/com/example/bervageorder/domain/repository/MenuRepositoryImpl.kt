@@ -7,16 +7,11 @@ import com.example.bervageorder.data.repository.MenuRepository
 import com.example.bervageorder.domain.model.Menu
 import com.example.bervageorder.domain.model.OptionType
 import com.example.bervageorder.domain.model.OrderMenu
-import com.example.bervageorder.presentation.menulist.MenuList
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.withContext
 import timber.log.Timber
-import java.lang.NullPointerException
 import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -24,38 +19,47 @@ import javax.inject.Singleton
 @Singleton
 class MenuRepositoryImpl @Inject constructor() : MenuRepository {
 
-    // TODO Flow를 사용하지 않을 때.
     override val menuList: MutableList<Menu> = mutableListOf()
     override val orderMenuOptionList: MutableList<OptionType> = mutableListOf()
 
     // TODO 2회차 질문 :: menuList에 대한 것을 Flow로 전달할 때, Flow<Result<List<Menu>>>로 전달해야하는지? 아니면, Collect하는 쪽에서
     //  Catch 중간 연산자를 사용해서 Error인 경우를 처리해야하는지
+    // 답변 : 스타일에 맞게 처리하면 됨
     override val menuListFlow: Flow<List<Menu>> = flow {
         val menuList = getFakeMenuList().map { Menu(it) }
         emit(menuList)
     }
 
-    // TODO List<Menu>를 Flow로 사용하지 않는 경우
-    override suspend fun getMenuList(): Result<List<Menu>> =
-        // TODO 2회차 질문 :: Repository에서 Entity -> Model로 변경 방식이 맞는지? runCatching의 올바르게 사용했는지..??
-        runCatching {
-            Timber.d("getMenuList() START :: ${menuList.size}")
-            getFakeMenuList().map { Menu(it) }.also {
-                Timber.d("getMenuList() END :: ${it.size}")
-            }
+    // TODO 2회차 질문 :: Repository에서 Entity -> Model로 변경 방식이 맞는지? runCatching의 올바르게 사용했는지..??
+    /**
+     *  답변 : runCatching은 Kotlin에서 try-catch문을 Result라는 타입을 이용해서 간단히 사용하기 위함.
+     *  onSuccess{}, onFailure{}는 1번씩 모두 실행됨, 개념 상 result에따라 어느쪽이 1번만 실행되는 것임.
+     *  onMap, fold()를 사용한다.
+     *  또한, getOrNull()이렇게 사용하는 것보다는 ViewModel까지 Result로 전달한다.
+     *  아니면 중간에 map을 사용하면 됨
+     *  map은 성공시에만 수행되기 때문.
+     */
+    override suspend fun getMenuList(): List<Menu> = runCatching {
+            getFakeMenuList().map { Menu(it) }
         }.onSuccess {
             Timber.d("getMenuList() SUCCESS :: ${menuList.size}")
-            it.forEach { menu -> menuList.add(menu) }.also {
-                Timber.d("getMenuList() END :: ${menuList.size} / ${menuList}")
-            }
+            it.forEach { menu -> menuList.add(menu) }
         }.onFailure {
             Timber.w("getMenuList() ERROR :: ${it.message}")
-        }
+        }.fold(
+            onSuccess = {
+                it
+            },
+            onFailure = {
+                emptyList()
+            }
+        )
 
     override suspend fun getMenuById(menuId: String): Result<Menu?> = runCatching {
         Timber.d("getMenuById() menuList :: ${menuList}")
         // TODO 2회차 질문 :: find는 해당 조건에 없다면 null을 반환하는데, 이때, Null 처리를 어떻게 하면 되는지? Null인 경우, 빈 객체로 정의?
-        menuList.find { it.id == menuId } // ?: Menu()
+        // 답변 : 이 경우에는 null 반환하는 것이 맞다. 조건에 있는 값이 없다는 의미이니깐
+        menuList.find { it.id == menuId }
     }.onSuccess {
         Timber.d("getMenuById() SUCCESS :: ${it}")
     }.onFailure {
@@ -175,10 +179,8 @@ class MenuRepositoryImpl @Inject constructor() : MenuRepository {
         }
     }
 
-    // TODO 질문 :: runCatching 올바른 사용법
     override suspend fun getOrderMenu(menuId: String): Result<OrderMenu> = runCatching {
-        val menu =
-            getMenuById(menuId = menuId).getOrNull() ?: throw NullPointerException("Menu Is Null!!")
+        val menu = getMenuById(menuId = menuId).getOrNull() ?: throw NullPointerException("Menu Is Null!!")
         OrderMenu(menu = menu, optionList = orderMenuOptionList)
     }.onSuccess {
         Timber.i("getOrderMenu() Success :: ${it} ")
