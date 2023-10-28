@@ -1,4 +1,4 @@
-package com.example.bervageorder.presentation.menudetail
+package com.example.bervageorder.presentation.menudetail.state
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -10,9 +10,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.bervageorder.domain.model.Menu
 import com.example.bervageorder.domain.model.OptionType
-import com.example.bervageorder.presentation.common.button.BottomButton
-import com.example.bervageorder.presentation.common.button.BottomButtonState
 import com.example.bervageorder.presentation.common.button.NextBottomButton
+import com.example.bervageorder.presentation.menudetail.CaffeineOptionRow
+import com.example.bervageorder.presentation.menudetail.HeaderTitle
+import com.example.bervageorder.presentation.menudetail.IceOptionRow
+import com.example.bervageorder.presentation.menudetail.IceQuantityOptionRow
 
 @Composable
 fun MenuDetailScreen(

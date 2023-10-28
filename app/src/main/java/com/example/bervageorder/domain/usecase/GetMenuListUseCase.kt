@@ -4,6 +4,6 @@ import com.example.bervageorder.domain.model.Menu
 import kotlinx.coroutines.flow.Flow
 
 interface GetMenuListUseCase {
-    suspend fun getMenuList(): List<Menu>
+    suspend fun getMenuList(): Result<List<Menu>>
     fun getMenuListFlow(): Flow<List<Menu>>
 }

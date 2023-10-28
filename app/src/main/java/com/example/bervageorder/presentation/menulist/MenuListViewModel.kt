@@ -5,16 +5,11 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.bervageorder.R
 import com.example.bervageorder.domain.usecase.GetMenuListUseCase
-import com.example.bervageorder.presentation.menulist.state.MenuListSubUiState
-import com.example.bervageorder.presentation.menulist.state.MenuListUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onEach
@@ -38,24 +33,9 @@ class MenuListViewModel @Inject constructor(
     val uiState: StateFlow<MenuListUiState> = _uiState.asStateFlow()
 
     init {
-//        getMenuList()
-        getMenuListFlow()
+        getMenuList()
+//        getMenuListFlow()
     }
-
-//    private fun getMenuList() {
-//        _uiState.update { MenuListUiState.Loading }
-//        viewModelScope.launch {
-//            getMenuListUseCase.getMenuList()
-//                .onSuccess { menuList ->
-//                    Timber.d("initMenuList() :: ${menuList.size}")
-//                    _uiState.update { MenuListUiState.Success(menuList.groupBy { it.type }) }
-//                }
-//                .onFailure {
-//                    Timber.w("initMenuList() ERROR :: ${it.message}")
-//                    _uiState.update { MenuListUiState.Error(errorMessage = R.string.title_error_message) }
-//                }
-//        }
-//    }
 
     private fun getMenuListFlow() {
         // TODO 2회차 질문 :: launchIn을 사용할 때, 본 함수를 suspend로 만들어야하는지?
@@ -73,5 +53,18 @@ class MenuListViewModel @Inject constructor(
                 _uiState.update { MenuListUiState.Error(errorMessage = R.string.title_error_message) }
             }
             .launchIn(viewModelScope)
+    }
+
+    private fun getMenuList() {
+        viewModelScope.launch {
+            getMenuListUseCase.getMenuList()
+                .onSuccess { menuList ->
+                    _uiState.update { MenuListUiState.Success(MenuListSubUiState.Success(menuMap = menuList.groupBy { it.type })) }
+                }
+                .onFailure {
+                    Timber.d("ERROR ${it.message}")
+                    _uiState.update { MenuListUiState.Error(errorMessage = R.string.title_error_message) }
+                }
+        }
     }
 }

@@ -1,6 +1,7 @@
 package com.example.bervageorder.data.entity
 
 import androidx.compose.runtime.Composable
+import com.example.bervageorder.domain.model.Caffeine
 
 /**
  *  [2회차 수업]

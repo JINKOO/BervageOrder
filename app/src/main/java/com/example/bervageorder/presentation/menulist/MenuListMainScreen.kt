@@ -13,7 +13,7 @@ import com.example.bervageorder.presentation.common.error.ErrorScreen
 import com.example.bervageorder.presentation.common.loading.LoadingScreen
 import com.example.bervageorder.presentation.common.topbar.BeverageOrderTopAppBar
 import com.example.bervageorder.presentation.common.topbar.BeverageOrderTopAppBarState
-import com.example.bervageorder.presentation.menulist.state.MenuListUiState
+import com.example.bervageorder.presentation.menulist.state.MenuList
 
 /**
  *  1. 선언형 프로그래밍 -> What
@@ -57,7 +57,7 @@ fun MenuListMainScreen(
         //  코드랩 TODO App 처럼 ViewModel에서 combine으로 처리..??
         // 답변 :: 이 경우에는 상태를 하위 Compose로 보낸다. uiState자체를 보내고, UiState를 더 세분화하게 나눈다.
         when(uiState) {
-            is MenuListUiState.None -> {}
+            is MenuListUiState.None -> Unit
             is MenuListUiState.Loading -> {
                 LoadingScreen(modifier = modifier.padding(paddingValues = paddingValues))
             }

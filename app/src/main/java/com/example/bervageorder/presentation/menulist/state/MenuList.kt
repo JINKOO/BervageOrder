@@ -1,4 +1,4 @@
-package com.example.bervageorder.presentation.menulist
+package com.example.bervageorder.presentation.menulist.state
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -14,12 +14,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.example.bervageorder.R
 import com.example.bervageorder.data.entity.MenuType
 import com.example.bervageorder.domain.model.Menu
 import com.example.bervageorder.presentation.common.error.ErrorScreen
-import com.example.bervageorder.presentation.menulist.state.MenuListSubUiState
-import com.example.bervageorder.presentation.menulist.state.MenuListUiState
+import com.example.bervageorder.presentation.menulist.MenuListSubUiState
+import com.example.bervageorder.presentation.menulist.MenuListUiState
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable

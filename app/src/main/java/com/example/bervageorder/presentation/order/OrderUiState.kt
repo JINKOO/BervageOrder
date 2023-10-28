@@ -1,4 +1,4 @@
-package com.example.bervageorder.presentation.order.state
+package com.example.bervageorder.presentation.order
 
 import androidx.annotation.StringRes
 import com.example.bervageorder.domain.model.Menu

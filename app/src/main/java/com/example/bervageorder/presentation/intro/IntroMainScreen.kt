@@ -8,6 +8,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.bervageorder.presentation.common.error.ErrorScreen
 import com.example.bervageorder.presentation.common.loading.LoadingScreen
 import com.example.bervageorder.presentation.common.topbar.BeverageOrderTopAppBar
 import com.example.bervageorder.presentation.common.topbar.BeverageOrderTopAppBarState
@@ -46,7 +47,7 @@ fun IntroMainScreen(
                     navigateToMenuList = navigateToMenuList
                 )
             }
-            is IntroUiState.Error -> { } // Unit
+            is IntroUiState.Error -> { ErrorScreen(errorState = (uiState as IntroUiState.Error)) }
         }
     }
 }

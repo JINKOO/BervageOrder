@@ -8,11 +8,14 @@ import com.example.bervageorder.domain.model.OptionType
 import com.example.bervageorder.domain.usecase.GetMenuUseCase
 import com.example.bervageorder.domain.usecase.SetOptionListUseCase
 import com.example.bervageorder.navigation.BeverageOrderDestinationArg
-import com.example.bervageorder.presentation.menudetail.state.MenuDetailUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onCompletion
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -31,7 +34,6 @@ class MenuDetailViewModel @Inject constructor(
     val menuId: String =
         savedStateHandle.get<String>(BeverageOrderDestinationArg.MENU_ID_ARG).orEmpty()
 
-    //
     private val selectedOptionMap: MutableMap<Int, OptionType> = mutableMapOf()
 
     init {

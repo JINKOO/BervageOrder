@@ -12,7 +12,7 @@ import com.example.bervageorder.presentation.common.error.ErrorScreen
 import com.example.bervageorder.presentation.common.loading.LoadingScreen
 import com.example.bervageorder.presentation.common.topbar.BeverageOrderTopAppBar
 import com.example.bervageorder.presentation.common.topbar.BeverageOrderTopAppBarState
-import com.example.bervageorder.presentation.order.state.OrderUiState
+import com.example.bervageorder.presentation.order.state.OrderScreen
 import timber.log.Timber
 
 @OptIn(ExperimentalMaterial3Api::class)

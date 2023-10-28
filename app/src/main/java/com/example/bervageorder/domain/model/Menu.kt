@@ -28,6 +28,9 @@ data class Menu(
     val priceFormatString: String
         get() = price.toDecimalFormat()
 
+    val caffeine: Caffeine
+        get() = if (isCaffeine) Caffeine.CAFFEINE else Caffeine.NONE
+
     companion object {
         operator fun invoke(menuEntity: MenuEntity): Menu {
             return Menu(

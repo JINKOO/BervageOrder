@@ -8,7 +8,7 @@ import javax.inject.Inject
 class GetMenuListUseCaseImpl @Inject constructor(
     private val menuRepository: MenuRepository
 ) : GetMenuListUseCase {
-    override suspend fun getMenuList(): List<Menu> {
+    override suspend fun getMenuList(): Result<List<Menu>> {
         return menuRepository.getMenuList()
     }
 

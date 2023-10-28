@@ -1,4 +1,4 @@
-package com.example.bervageorder.presentation.order
+package com.example.bervageorder.presentation.order.state
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

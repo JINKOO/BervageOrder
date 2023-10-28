@@ -9,3 +9,21 @@ enum class OptionType(val value: String) {
     ICE_NORMAL("얼음 보통"),
     ICE_MORE("얼음 많이")
 }
+
+enum class Temperature {
+    ICE,
+    HOT,
+    NONE
+}
+
+enum class Caffeine {
+    CAFFEINE,
+    DE_CAFFEINE,
+    NONE
+}
+
+enum class IceQuantity {
+    LESS,
+    NORMAL,
+    MORE,
+}

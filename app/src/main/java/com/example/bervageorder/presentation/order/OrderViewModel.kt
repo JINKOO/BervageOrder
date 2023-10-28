@@ -8,7 +8,6 @@ import com.example.bervageorder.data.repository.MenuRepository
 import com.example.bervageorder.domain.model.OptionType
 import com.example.bervageorder.domain.usecase.GetOrderMenuUseCase
 import com.example.bervageorder.navigation.BeverageOrderDestinationArg.MENU_ID_ARG
-import com.example.bervageorder.presentation.order.state.OrderUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

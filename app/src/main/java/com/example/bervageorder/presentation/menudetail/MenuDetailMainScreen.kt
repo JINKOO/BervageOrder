@@ -36,9 +36,10 @@ import com.example.bervageorder.presentation.common.error.ErrorScreen
 import com.example.bervageorder.presentation.common.loading.LoadingScreen
 import com.example.bervageorder.presentation.common.topbar.BeverageOrderTopAppBar
 import com.example.bervageorder.presentation.common.topbar.BeverageOrderTopAppBarState
-import com.example.bervageorder.presentation.menudetail.state.MenuDetailUiState
+import com.example.bervageorder.presentation.menudetail.state.MenuDetailScreen
 import com.example.bervageorder.presentation.menudetail.state.MenuOptionState
 import com.example.bervageorder.presentation.menudetail.state.getOptionStringResId
+import timber.log.Timber
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -49,6 +50,7 @@ fun MenuDetailMainScreen(
     navigateToOrder: (String) -> Unit
 ) {
     val uiState: MenuDetailUiState by viewModel.uiState.collectAsStateWithLifecycle()
+    Timber.d("MenuDetailMainScreen() :: ${viewModel.menuId}")
     Scaffold(
         topBar = {
             BeverageOrderTopAppBar(
@@ -65,7 +67,7 @@ fun MenuDetailMainScreen(
         // 답변 :: 이 부분은 이번 과제에서 Modeling을 통해 진행 , 결론은 없어도 됨, Menu Model에서 Ice옵션이 있는지에 대한 로직, OrderModel에서 선택했는지에 대한 로직과 조합해서 보여주면 됨
         var isShowIceQuantityOption by rememberSaveable { mutableStateOf(false) }
         when(uiState) {
-            is MenuDetailUiState.None -> {}
+            is MenuDetailUiState.None -> Unit
             is MenuDetailUiState.Loading -> { LoadingScreen() }
             is MenuDetailUiState.Success -> {
                 MenuDetailScreen(

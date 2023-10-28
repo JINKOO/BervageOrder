@@ -15,6 +15,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 
+interface ErrorState {
+    val errorMessageId: Int
+}
+
 @Composable
 fun ErrorScreen(
     modifier: Modifier = Modifier,
@@ -37,11 +41,6 @@ fun ErrorScreen(
     }
 }
 
-interface ErrorState {
-    val errorMessageId: Int
-}
-
-
 // TODO 추상 클래스 interface 차이
 interface Word {
     val word: String
@@ -51,9 +50,9 @@ class WordText {
     private var text1: String = ""
     private var text2: String = ""
 
-    var text3: String
+    var text3: String = ""
         get() = ""
         set(value) {
-            "$value@"
+            field = "$value"
         }
 }
