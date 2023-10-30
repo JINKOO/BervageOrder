@@ -4,7 +4,11 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.bervageorder.R
-import com.example.bervageorder.domain.model.OptionType
+import com.example.bervageorder.domain.model.Caffeine
+import com.example.bervageorder.domain.model.IceQuantity
+import com.example.bervageorder.domain.model.OrderMenuOption
+import com.example.bervageorder.domain.model.OptionTypeSealed
+import com.example.bervageorder.domain.model.Temperature
 import com.example.bervageorder.domain.usecase.GetMenuUseCase
 import com.example.bervageorder.domain.usecase.SetOptionListUseCase
 import com.example.bervageorder.navigation.BeverageOrderDestinationArg
@@ -12,10 +16,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onCompletion
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -34,7 +34,8 @@ class MenuDetailViewModel @Inject constructor(
     val menuId: String =
         savedStateHandle.get<String>(BeverageOrderDestinationArg.MENU_ID_ARG).orEmpty()
 
-    private val selectedOptionMap: MutableMap<Int, OptionType> = mutableMapOf()
+    private val _Order_menuOption: MutableStateFlow<OrderMenuOption> = MutableStateFlow(OrderMenuOption())
+    val menuOption = _Order_menuOption.asStateFlow()
 
     init {
         getCurrentMenu()
@@ -59,26 +60,22 @@ class MenuDetailViewModel @Inject constructor(
         }
     }
 
-    fun addOption(optionId: Int, option: OptionType) {
-        Timber.d("selectedOption() :: ${optionId} / ${option}")
-        selectedOptionMap[optionId] = option
+    fun addOption(option: OptionTypeSealed) {
+       when(option) {
+            is OptionTypeSealed.Ice -> _Order_menuOption.update { it.copy(temperature = Temperature.ICE)}
+            is OptionTypeSealed.Hot -> _Order_menuOption.update { it.copy(temperature = Temperature.HOT)}
+            is OptionTypeSealed.Caffeine -> _Order_menuOption.update { it.copy(caffeine = Caffeine.CAFFEINE)}
+            is OptionTypeSealed.DeCaffeine -> _Order_menuOption.update { it.copy(caffeine = Caffeine.DE_CAFFEINE)}
+            is OptionTypeSealed.IceMore -> _Order_menuOption.update{it.copy(iceQuantity = IceQuantity.MORE) }
+            is OptionTypeSealed.IceNormal -> _Order_menuOption.update { it.copy(iceQuantity = IceQuantity.NORMAL) }
+            is OptionTypeSealed.IceLess -> _Order_menuOption.update { it.copy(iceQuantity = IceQuantity.LESS) }
+        }
     }
 
     fun clearOption() {
-        selectedOptionMap.clear()
     }
 
     fun setSelectedOptions() {
-        Timber.d("selectedOption() :: ${selectedOptionMap.size}")
-        viewModelScope.launch {
-            val optionList = selectedOptionMap.toMap().toList().map { it.second }
-            setOptionListUseCase.setOptionList(menuId, optionList)
-                .onSuccess {
-                    _uiState.update { MenuDetailUiState.AllOptionSelected }
-                }
-                .onFailure {
-                    Timber.w("setSelectedOptions() ERROR :: ${it.message}")
-                }
-        }
+        Timber.d("selectedOption() :: ${menuOption.value}")
     }
 }

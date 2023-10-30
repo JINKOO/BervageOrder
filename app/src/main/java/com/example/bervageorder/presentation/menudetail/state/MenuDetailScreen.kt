@@ -9,7 +9,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.bervageorder.domain.model.Menu
-import com.example.bervageorder.domain.model.OptionType
+import com.example.bervageorder.domain.model.OrderMenuOption
+import com.example.bervageorder.domain.model.OptionTypeSealed
+import com.example.bervageorder.domain.model.Temperature
 import com.example.bervageorder.presentation.common.button.NextBottomButton
 import com.example.bervageorder.presentation.menudetail.CaffeineOptionRow
 import com.example.bervageorder.presentation.menudetail.HeaderTitle
@@ -20,9 +22,9 @@ import com.example.bervageorder.presentation.menudetail.IceQuantityOptionRow
 fun MenuDetailScreen(
     modifier: Modifier = Modifier,
     menu: Menu?,
-    isShowIceQuantityOption: Boolean,
+    orderMenuOption: OrderMenuOption,
     onClickIceOption: (Boolean) -> Unit,
-    onClickOption: (Int, OptionType) -> Unit,
+    onClickOption: (OptionTypeSealed) -> Unit,
     onClickNext: () -> Unit
 ) {
     if (menu == null) return
@@ -34,7 +36,7 @@ fun MenuDetailScreen(
     ) {
         MenuOptionsColumn(
             menu = menu,
-            isShowIceQuantityOption = isShowIceQuantityOption,
+            orderMenuOption = orderMenuOption,
             onClickIceOption = onClickIceOption,
             onClickOption = onClickOption
         )
@@ -47,9 +49,9 @@ fun MenuDetailScreen(
 private fun MenuOptionsColumn(
     modifier: Modifier = Modifier,
     menu: Menu,
+    orderMenuOption: OrderMenuOption,
     onClickIceOption: (Boolean) -> Unit,
-    isShowIceQuantityOption: Boolean,
-    onClickOption: (Int, OptionType) -> Unit
+    onClickOption: (OptionTypeSealed) -> Unit
 ) {
     Column(
         modifier = modifier
@@ -76,7 +78,7 @@ private fun MenuOptionsColumn(
         }
 
         // 동적으로 노출되도록 변경
-        if (menu.isIceQuantity && isShowIceQuantityOption) {
+        if (menu.isIceQuantity && orderMenuOption.temperature == Temperature.ICE) {
             IceQuantityOptionRow(
                 modifier = Modifier.padding(top = 32.dp),
                 onClickOption = onClickOption

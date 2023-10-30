@@ -31,7 +31,8 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.bervageorder.R
-import com.example.bervageorder.domain.model.OptionType
+import com.example.bervageorder.domain.model.OrderMenuOption
+import com.example.bervageorder.domain.model.OptionTypeSealed
 import com.example.bervageorder.presentation.common.error.ErrorScreen
 import com.example.bervageorder.presentation.common.loading.LoadingScreen
 import com.example.bervageorder.presentation.common.topbar.BeverageOrderTopAppBar
@@ -50,6 +51,7 @@ fun MenuDetailMainScreen(
     navigateToOrder: (String) -> Unit
 ) {
     val uiState: MenuDetailUiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val orderMenuOption: OrderMenuOption by viewModel.menuOption.collectAsStateWithLifecycle()
     Timber.d("MenuDetailMainScreen() :: ${viewModel.menuId}")
     Scaffold(
         topBar = {
@@ -73,9 +75,9 @@ fun MenuDetailMainScreen(
                 MenuDetailScreen(
                     modifier = modifier.padding(paddingValues = paddingValues),
                     menu = (uiState as MenuDetailUiState.Success).menu,
-                    onClickOption = { id, option -> viewModel.addOption(id, option) },
+                    orderMenuOption = orderMenuOption,
+                    onClickOption = { option -> viewModel.addOption(option) },
                     onClickIceOption = { isShowIceQuantityOption = it },
-                    isShowIceQuantityOption = isShowIceQuantityOption,
                     onClickNext = { viewModel.setSelectedOptions() }
                 )
             }
@@ -110,7 +112,7 @@ fun HeaderTitle(
 fun IceOptionRow(
     modifier: Modifier = Modifier,
     onClickIceOption: (Boolean) -> Unit,
-    onClickOption: (Int, OptionType) -> Unit
+    onClickOption: (OptionTypeSealed) -> Unit
 ) {
     Column(
         modifier = modifier,
@@ -123,12 +125,12 @@ fun IceOptionRow(
         OptionButtonRow(
             optionList = MenuOptionState.getDefaultOptionList(),
             onClickOption = {
-                if (it == OptionType.ICE) {
+                if (it is OptionTypeSealed.Ice) {
                     onClickIceOption(true)
                 } else {
                     onClickIceOption(false)
                 }
-                onClickOption(0, it)
+                onClickOption(it)
             }
         )
     }
@@ -137,7 +139,7 @@ fun IceOptionRow(
 @Composable
 fun CaffeineOptionRow(
     modifier: Modifier = Modifier,
-    onClickOption: (Int, OptionType) -> Unit
+    onClickOption: (OptionTypeSealed) -> Unit
 ) {
     Column(
         modifier = modifier,
@@ -149,7 +151,7 @@ fun CaffeineOptionRow(
         )
         OptionButtonRow(
             optionList = MenuOptionState.getCaffeineOptionList(),
-            onClickOption = { onClickOption(1, it) }
+            onClickOption = { onClickOption(it) }
         )
     }
 }
@@ -157,7 +159,7 @@ fun CaffeineOptionRow(
 @Composable
 fun IceQuantityOptionRow(
     modifier: Modifier = Modifier,
-    onClickOption: (Int, OptionType) -> Unit
+    onClickOption: (OptionTypeSealed) -> Unit
 ) {
     Column(
         modifier = modifier,
@@ -169,7 +171,7 @@ fun IceQuantityOptionRow(
         )
         OptionButtonRow(
             optionList = MenuOptionState.getIceQuantityOptionList(),
-            onClickOption = { onClickOption(2, it) }
+            onClickOption = { onClickOption(it) }
         )
     }
 }
@@ -178,7 +180,7 @@ fun IceQuantityOptionRow(
 fun OptionButtonRow(
     modifier: Modifier = Modifier,
     optionList: List<MenuOptionState> = emptyList(),
-    onClickOption: (OptionType) -> Unit
+    onClickOption: (OptionTypeSealed) -> Unit
 ) {
     var selectedOption by remember { mutableStateOf<MenuOptionState?>(null) }
     Column {

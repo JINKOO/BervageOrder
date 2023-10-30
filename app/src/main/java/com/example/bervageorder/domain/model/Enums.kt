@@ -1,15 +1,5 @@
 package com.example.bervageorder.domain.model
 
-enum class OptionType(val value: String) {
-    HOT("뜨겁게"),
-    ICE("아이스"),
-    CAFFEINE("카페인"),
-    DE_CAFFEINE("디카페인"),
-    ICE_LESS("얼음 적게"),
-    ICE_NORMAL("얼음 보통"),
-    ICE_MORE("얼음 많이")
-}
-
 enum class Temperature {
     ICE,
     HOT,
@@ -26,4 +16,15 @@ enum class IceQuantity {
     LESS,
     NORMAL,
     MORE,
+    NONE
+}
+
+sealed class OptionTypeSealed {
+    object Hot : OptionTypeSealed()
+    object Ice : OptionTypeSealed()
+    object Caffeine : OptionTypeSealed()
+    object DeCaffeine : OptionTypeSealed()
+    object IceLess : OptionTypeSealed()
+    object IceNormal : OptionTypeSealed()
+    object IceMore : OptionTypeSealed()
 }
