@@ -10,7 +10,7 @@ import com.example.bervageorder.domain.model.OptionTypeSealed
 import com.example.bervageorder.domain.model.OrderMenuOption
 import com.example.bervageorder.domain.model.Temperature
 import com.example.bervageorder.domain.usecase.GetMenuUseCase
-import com.example.bervageorder.domain.usecase.SetOptionListUseCase
+import com.example.bervageorder.domain.usecase.PostOptionListUseCase
 import com.example.bervageorder.navigation.BeverageOrderDestinationArg
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -25,7 +25,7 @@ import javax.inject.Inject
 class MenuDetailViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val getMenuUseCase: GetMenuUseCase,
-    private val setOptionListUseCase: SetOptionListUseCase
+    private val postOptionListUseCase: PostOptionListUseCase
 ) : ViewModel() {
 
     private val _uiState: MutableStateFlow<MenuDetailUiState> =
@@ -52,9 +52,19 @@ class MenuDetailViewModel @Inject constructor(
                 .onSuccess { menu ->
                     Timber.d("getCurrentMenu() result :: ${menu}")
                     _uiState.update {
-                        MenuDetailUiState.Success(
-                            menu = menu
-                        )
+                        MenuDetailUiState.Success(menu = menu)
+                    }
+
+                    // TODO 3회차 질문 :: OrderMenuOption Model에 옵션값 제외한, 기본정보 업데이트 로직을 여기서 처리해도 되는지..??
+                    //  아니면 Repository단에서 처리하는 것이 맞는지
+                    menu?.let {
+                        _orderMenuOption.update {
+                            it.copy(
+                                id = menu.id,
+                                price = menu.price,
+                                name = menu.name
+                            )
+                        }
                     }
                 }
                 .onFailure {
@@ -92,7 +102,7 @@ class MenuDetailViewModel @Inject constructor(
     fun postMenuOptions() {
         Timber.d("selectedOption() :: ${orderMenuOption.value}")
         viewModelScope.launch {
-            setOptionListUseCase.postOptionList(orderMenuOption.value)
+            postOptionListUseCase.postOptionList(orderMenuOption.value)
                 .onSuccess {
                     _uiState.update { MenuDetailUiState.AllOptionSelected }
                 }

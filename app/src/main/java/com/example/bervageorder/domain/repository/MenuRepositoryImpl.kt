@@ -23,13 +23,19 @@ import javax.inject.Singleton
 @Singleton
 class MenuRepositoryImpl @Inject constructor() : MenuRepository {
 
+    // TODO 2회차 질문 :: menuList에 대한 것을 Flow로 전달할 때, Flow<Result<List<Menu>>>로 전달해야하는지? 아니면, Collect하는 쪽에서
+    //  Catch 중간 연산자를 사용해서 Error인 경우를 처리해야하는지
+    // 답변 : 스타일에 맞게 처리하면 됨
+    override val menuListFlow: Flow<List<Menu>> = flow {
+        val menuList = getFakeMenuList().map { Menu(it) }
+        emit(menuList)
+    }
+
     override val menuList: MutableList<Menu> = mutableListOf()
     override val orderMenuOptionList: MutableList<OptionType> = mutableListOf()
-    override val menuOption: OrderMenuOption
-        get() = OrderMenuOption()
 
     private val _menuOptionStateFlow: MutableStateFlow<OrderMenuOption> = MutableStateFlow(OrderMenuOption())
-    val menuOptionStateFlow = _menuOptionStateFlow.asStateFlow()
+    override val orderMenuFlow = _menuOptionStateFlow.asStateFlow()
 
     // TODO 2회차 질문 :: Repository에서 Entity -> Model로 변경 방식이 맞는지? runCatching의 올바르게 사용했는지..??
     private suspend fun getFakeMenuList(): List<MenuEntity> =
@@ -126,14 +132,6 @@ class MenuRepositoryImpl @Inject constructor() : MenuRepository {
             )
         }
 
-    // TODO 2회차 질문 :: menuList에 대한 것을 Flow로 전달할 때, Flow<Result<List<Menu>>>로 전달해야하는지? 아니면, Collect하는 쪽에서
-    //  Catch 중간 연산자를 사용해서 Error인 경우를 처리해야하는지
-    // 답변 : 스타일에 맞게 처리하면 됨
-    override val menuListFlow: Flow<List<Menu>> = flow {
-        val menuList = getFakeMenuList().map { Menu(it) }
-        emit(menuList)
-    }
-
     /**
      *  답변 : runCatching은 Kotlin에서 try-catch문을 Result라는 타입을 이용해서 간단히 사용하기 위함.
      *  onSuccess{}, onFailure{}는 1번씩 모두 실행됨, 개념 상 result에따라 어느쪽이 1번만 실행되는 것임.
@@ -165,6 +163,9 @@ class MenuRepositoryImpl @Inject constructor() : MenuRepository {
     override suspend fun postOptionList(orderMenuOption: OrderMenuOption) = kotlin.runCatching {
         _menuOptionStateFlow.update {
             it.copy(
+                id = orderMenuOption.id,
+                name = orderMenuOption.name,
+                price = orderMenuOption.price,
                 temperature = orderMenuOption.temperature,
                 caffeine = orderMenuOption.caffeine,
                 iceQuantity = orderMenuOption.iceQuantity
@@ -175,18 +176,6 @@ class MenuRepositoryImpl @Inject constructor() : MenuRepository {
     }.onFailure {
         Result.failure<Exception>(it)
     }
-
-    override suspend fun getOrderMenu(menuId: String): Result<OrderMenu> = runCatching {
-        val menu = getMenuById(menuId = menuId).getOrNull() ?: throw NullPointerException("Menu Is Null!!")
-        OrderMenu(menu = menu, optionList = orderMenuOptionList)
-    }.onSuccess {
-        Timber.i("getOrderMenu() Success :: ${it} ")
-        Result.success(it)
-    }.onFailure {
-        Timber.w("getOrderMenu() ERROR :: ${it.message}")
-        Result.failure<Exception>(it)
-    }
-
 
     override suspend fun clearAll() = withContext(Dispatchers.IO) {
         menuList.clear()

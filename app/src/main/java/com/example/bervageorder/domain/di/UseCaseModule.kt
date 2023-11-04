@@ -6,8 +6,8 @@ import com.example.bervageorder.domain.usecase.GetMenuUseCase
 import com.example.bervageorder.domain.usecase.GetMenuUseCaseImpl
 import com.example.bervageorder.domain.usecase.GetOrderMenuUseCase
 import com.example.bervageorder.domain.usecase.GetOrderMenuUseCaseImpl
-import com.example.bervageorder.domain.usecase.SetOptionListUseCase
-import com.example.bervageorder.domain.usecase.SetOptionListUseCaseImpl
+import com.example.bervageorder.domain.usecase.PostOptionListUseCase
+import com.example.bervageorder.domain.usecase.PostOptionListUseCaseImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -33,8 +33,8 @@ abstract class UseCaseModule {
     @Singleton
     @Binds
     abstract fun bindSetOptionListUseCase(
-        setOptionListUseCaseImpl: SetOptionListUseCaseImpl
-    ): SetOptionListUseCase
+        setOptionListUseCaseImpl: PostOptionListUseCaseImpl
+    ): PostOptionListUseCase
 
     @Singleton
     @Binds
