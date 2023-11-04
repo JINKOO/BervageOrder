@@ -1,7 +1,7 @@
 package com.example.bervageorder.domain.usecase
 
-import com.example.bervageorder.domain.model.OptionType
+import com.example.bervageorder.domain.model.OrderMenuOption
 
 interface SetOptionListUseCase {
-    suspend fun setOptionList(menuId: String, optionList: List<OptionType>): Result<Boolean>
+    suspend fun postOptionList(orderMenuOption: OrderMenuOption): Result<Unit>
 }

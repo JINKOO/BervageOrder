@@ -51,8 +51,7 @@ fun MenuDetailMainScreen(
     navigateToOrder: (String) -> Unit
 ) {
     val uiState: MenuDetailUiState by viewModel.uiState.collectAsStateWithLifecycle()
-    val orderMenuOption: OrderMenuOption by viewModel.menuOption.collectAsStateWithLifecycle()
-    Timber.d("MenuDetailMainScreen() :: ${viewModel.menuId}")
+    val orderMenuOption: OrderMenuOption by viewModel.orderMenuOption.collectAsStateWithLifecycle()
     Scaffold(
         topBar = {
             BeverageOrderTopAppBar(
@@ -78,7 +77,7 @@ fun MenuDetailMainScreen(
                     orderMenuOption = orderMenuOption,
                     onClickOption = { option -> viewModel.addOption(option) },
                     onClickIceOption = { isShowIceQuantityOption = it },
-                    onClickNext = { viewModel.setSelectedOptions() }
+                    onClickNext = { viewModel.postMenuOptions() }
                 )
             }
             is MenuDetailUiState.AllOptionSelected -> { navigateToOrder(viewModel.menuId) }

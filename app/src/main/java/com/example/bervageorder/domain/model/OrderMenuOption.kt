@@ -1,7 +1,7 @@
 package com.example.bervageorder.domain.model
 
 /**
- *  사용자에게 옵션 입력 받는 DTO
+ *  현재 선택한 메뉴에 대한 Option 선택 DTO
  */
 data class OrderMenuOption(
     val temperature: Temperature = Temperature.NONE,

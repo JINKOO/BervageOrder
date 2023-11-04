@@ -11,6 +11,7 @@ import kotlinx.coroutines.withContext
 import java.util.UUID
 import javax.inject.Inject
 
+// TODO menuList를 flow를 사용해서 한다.
 class MenuLocalDataSource @Inject constructor() {
 
     val menuList: Flow<List<Menu>> = flow {

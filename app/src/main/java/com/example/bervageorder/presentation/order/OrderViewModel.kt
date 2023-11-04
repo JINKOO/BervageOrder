@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.bervageorder.R
 import com.example.bervageorder.data.repository.MenuRepository
-import com.example.bervageorder.domain.model.OptionType
 import com.example.bervageorder.domain.usecase.GetOrderMenuUseCase
 import com.example.bervageorder.navigation.BeverageOrderDestinationArg.MENU_ID_ARG
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -14,7 +13,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import timber.log.Timber
-import java.lang.StringBuilder
 import javax.inject.Inject
 
 @HiltViewModel
@@ -40,7 +38,7 @@ class OrderViewModel @Inject constructor(
                 .onSuccess { orderMenu ->
                     _uiState.update { OrderUiState.Success(
                         menu = orderMenu.menu,
-                        optionListString = formatOptionListToString(orderMenu.optionList)
+//                        optionListString = formatOptionListToString(orderMenu.optionList)
                     ) }
                 }
                 .onFailure {
@@ -48,18 +46,6 @@ class OrderViewModel @Inject constructor(
                     _uiState.update { OrderUiState.Error(errorMessage = R.string.title_error_message) }
                 }
         }
-    }
-
-    private fun formatOptionListToString(optionList: List<OptionType>): String {
-        val stringBuilder = StringBuilder()
-        optionList.forEachIndexed { index, option ->
-            stringBuilder.append(option.value).also {
-                if (index != optionList.lastIndex) {
-                    it.append("/ ")
-                }
-            }
-        }
-        return stringBuilder.toString()
     }
 
     fun clearAll() {

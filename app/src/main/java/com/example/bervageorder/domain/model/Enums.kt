@@ -1,5 +1,9 @@
 package com.example.bervageorder.domain.model
 
+enum class OptionType{
+
+}
+
 enum class Temperature {
     ICE,
     HOT,

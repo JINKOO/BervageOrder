@@ -6,8 +6,8 @@ import androidx.lifecycle.viewModelScope
 import com.example.bervageorder.R
 import com.example.bervageorder.domain.model.Caffeine
 import com.example.bervageorder.domain.model.IceQuantity
-import com.example.bervageorder.domain.model.OrderMenuOption
 import com.example.bervageorder.domain.model.OptionTypeSealed
+import com.example.bervageorder.domain.model.OrderMenuOption
 import com.example.bervageorder.domain.model.Temperature
 import com.example.bervageorder.domain.usecase.GetMenuUseCase
 import com.example.bervageorder.domain.usecase.SetOptionListUseCase
@@ -28,14 +28,18 @@ class MenuDetailViewModel @Inject constructor(
     private val setOptionListUseCase: SetOptionListUseCase
 ) : ViewModel() {
 
-    private val _uiState: MutableStateFlow<MenuDetailUiState> = MutableStateFlow(MenuDetailUiState.None)
+    private val _uiState: MutableStateFlow<MenuDetailUiState> =
+        MutableStateFlow(MenuDetailUiState.None)
     val uiState: StateFlow<MenuDetailUiState> = _uiState.asStateFlow()
 
     val menuId: String =
         savedStateHandle.get<String>(BeverageOrderDestinationArg.MENU_ID_ARG).orEmpty()
 
-    private val _Order_menuOption: MutableStateFlow<OrderMenuOption> = MutableStateFlow(OrderMenuOption())
-    val menuOption = _Order_menuOption.asStateFlow()
+    // 선택한 메뉴에 대한 option값들을 저장하는 stateFlow
+    // StateFlow를 사용한 이유는, ICE를 선택한 경우, 얼음양을 조절하는 Row를 동적으로 보여주기 위해.
+    private val _orderMenuOption: MutableStateFlow<OrderMenuOption> =
+        MutableStateFlow(OrderMenuOption())
+    val orderMenuOption = _orderMenuOption.asStateFlow()
 
     init {
         getCurrentMenu()
@@ -60,22 +64,42 @@ class MenuDetailViewModel @Inject constructor(
         }
     }
 
+    /**
+     *  각 메뉴에서 선택한 Option에 따라 orderMenuOption 상태를 update한다.
+     *  data class의 copy를 사용.
+     *  copy()를 사용하는 가장 큰 이유는 data class를 immutable하게 만들기 위해.
+     *  즉, 복사본을 만들어서, 값을 update한다.
+     */
     fun addOption(option: OptionTypeSealed) {
-       when(option) {
-            is OptionTypeSealed.Ice -> _Order_menuOption.update { it.copy(temperature = Temperature.ICE)}
-            is OptionTypeSealed.Hot -> _Order_menuOption.update { it.copy(temperature = Temperature.HOT)}
-            is OptionTypeSealed.Caffeine -> _Order_menuOption.update { it.copy(caffeine = Caffeine.CAFFEINE)}
-            is OptionTypeSealed.DeCaffeine -> _Order_menuOption.update { it.copy(caffeine = Caffeine.DE_CAFFEINE)}
-            is OptionTypeSealed.IceMore -> _Order_menuOption.update{it.copy(iceQuantity = IceQuantity.MORE) }
-            is OptionTypeSealed.IceNormal -> _Order_menuOption.update { it.copy(iceQuantity = IceQuantity.NORMAL) }
-            is OptionTypeSealed.IceLess -> _Order_menuOption.update { it.copy(iceQuantity = IceQuantity.LESS) }
+        when (option) {
+            is OptionTypeSealed.Ice -> _orderMenuOption.update { it.copy(temperature = Temperature.ICE) }
+            is OptionTypeSealed.Hot -> _orderMenuOption.update { it.copy(temperature = Temperature.HOT) }
+            is OptionTypeSealed.Caffeine -> _orderMenuOption.update { it.copy(caffeine = Caffeine.CAFFEINE) }
+            is OptionTypeSealed.DeCaffeine -> _orderMenuOption.update { it.copy(caffeine = Caffeine.DE_CAFFEINE) }
+            is OptionTypeSealed.IceMore -> _orderMenuOption.update { it.copy(iceQuantity = IceQuantity.MORE) }
+            is OptionTypeSealed.IceNormal -> _orderMenuOption.update { it.copy(iceQuantity = IceQuantity.NORMAL) }
+            is OptionTypeSealed.IceLess -> _orderMenuOption.update { it.copy(iceQuantity = IceQuantity.LESS) }
         }
     }
 
+    /**
+     *  뒤로가기 선택 시, 알림 popUp을 노출하고, 선택한 Option값을 모두 null로 만든다.
+     */
     fun clearOption() {
+        Timber.d("clearOption()")
     }
 
-    fun setSelectedOptions() {
-        Timber.d("selectedOption() :: ${menuOption.value}")
+    fun postMenuOptions() {
+        Timber.d("selectedOption() :: ${orderMenuOption.value}")
+        viewModelScope.launch {
+            setOptionListUseCase.postOptionList(orderMenuOption.value)
+                .onSuccess {
+                    _uiState.update { MenuDetailUiState.AllOptionSelected }
+                }
+                .onFailure {
+                    Timber.e("postMenuOptions() ERROR :: ${it.message}")
+                    _uiState.update { MenuDetailUiState.Error(messageId = R.string.title_error_message) }
+                }
+        }
     }
 }
