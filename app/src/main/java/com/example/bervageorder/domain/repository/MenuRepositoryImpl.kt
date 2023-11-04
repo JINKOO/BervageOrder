@@ -5,8 +5,6 @@ import com.example.bervageorder.data.entity.MenuType
 import com.example.bervageorder.data.entity.TemperatureType
 import com.example.bervageorder.data.repository.MenuRepository
 import com.example.bervageorder.domain.model.Menu
-import com.example.bervageorder.domain.model.OptionType
-import com.example.bervageorder.domain.model.OrderMenu
 import com.example.bervageorder.domain.model.OrderMenuOption
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -32,7 +30,6 @@ class MenuRepositoryImpl @Inject constructor() : MenuRepository {
     }
 
     override val menuList: MutableList<Menu> = mutableListOf()
-    override val orderMenuOptionList: MutableList<OptionType> = mutableListOf()
 
     private val _menuOptionStateFlow: MutableStateFlow<OrderMenuOption> = MutableStateFlow(OrderMenuOption())
     override val orderMenuFlow = _menuOptionStateFlow.asStateFlow()
@@ -179,9 +176,6 @@ class MenuRepositoryImpl @Inject constructor() : MenuRepository {
 
     override suspend fun clearAll() = withContext(Dispatchers.IO) {
         menuList.clear()
-        orderMenuOptionList.clear().also {
-            Timber.d("clearAll() :: ${it}")
-        }
     }
 
     private fun createMenuId(): String = UUID.randomUUID().toString()

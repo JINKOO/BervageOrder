@@ -1,9 +1,5 @@
 package com.example.bervageorder.domain.model
 
-enum class OptionType{
-
-}
-
 enum class Temperature(val value: String) {
     ICE("아이스"),
     HOT("뜨겁게"),

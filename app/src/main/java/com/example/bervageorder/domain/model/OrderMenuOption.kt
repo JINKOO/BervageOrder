@@ -9,7 +9,7 @@ data class OrderMenuOption(
     val price: Int = 0,
     val temperature: Temperature = Temperature.NONE,
     val caffeine: Caffeine = Caffeine.NONE,
-    val iceQuantity: IceQuantity = IceQuantity.NORMAL
+    val iceQuantity: IceQuantity = IceQuantity.NONE
 ) {
     fun getOptionFormatString(): String {
         val optionList = mutableListOf<String>()

@@ -4,7 +4,6 @@ import androidx.annotation.ColorRes
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import com.example.bervageorder.R
-import com.example.bervageorder.domain.model.OptionType
 import com.example.bervageorder.domain.model.OptionTypeSealed
 
 sealed class MenuOptionState(
