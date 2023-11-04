@@ -92,13 +92,6 @@ class MenuDetailViewModel @Inject constructor(
         }
     }
 
-    /**
-     *  뒤로가기 선택 시, 알림 popUp을 노출하고, 선택한 Option값을 모두 null로 만든다.
-     */
-    fun clearOption() {
-        Timber.d("clearOption()")
-    }
-
     fun postMenuOptions() {
         Timber.d("selectedOption() :: ${orderMenuOption.value}")
         viewModelScope.launch {
@@ -111,5 +104,12 @@ class MenuDetailViewModel @Inject constructor(
                     _uiState.update { MenuDetailUiState.Error(messageId = R.string.title_error_message) }
                 }
         }
+    }
+
+    /**
+     *  뒤로가기 선택 시, 알림 popUp을 노출하고, 선택한 Option값을 모두 null로 만든다.
+     */
+    fun clearOption() {
+        Timber.d("clearOption()")
     }
 }

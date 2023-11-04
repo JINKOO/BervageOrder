@@ -1,22 +1,41 @@
 package com.example.bervageorder.domain.model
 
-enum class Temperature(val value: String) {
-    ICE("아이스"),
-    HOT("뜨겁게"),
-    NONE("")
+enum class Temperature {
+    ICE,
+    HOT,
+    NONE;
+
+    fun getName(): String? = when(this) {
+        ICE -> "아이스"
+        HOT -> "뜨겁게"
+        else -> null
+    }
 }
 
-enum class Caffeine(val value: String) {
-    CAFFEINE("카페인"),
-    DE_CAFFEINE("디카페인"),
-    NONE("")
+enum class Caffeine {
+    CAFFEINE,
+    DE_CAFFEINE,
+    NONE;
+
+    fun getName(): String? = when(this) {
+        CAFFEINE -> "카페인"
+        DE_CAFFEINE -> "디카페인"
+        else -> null
+    }
 }
 
-enum class IceQuantity(val value: String) {
-    LESS("적게"),
-    NORMAL("보통"),
-    MORE("많이"),
-    NONE("")
+enum class IceQuantity {
+    LESS,
+    NORMAL,
+    MORE,
+    NONE;
+
+    fun getName(): String? = when(this) {
+        LESS -> "적게"
+        NORMAL -> "보통"
+        MORE -> "많이"
+        else -> null
+    }
 }
 
 sealed class OptionTypeSealed {

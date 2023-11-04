@@ -13,19 +13,9 @@ data class OrderMenuOption(
 ) {
     fun getOptionFormatString(): String {
         val optionList = mutableListOf<String>()
-
-        temperature.value.let {
-            if (it.isNotEmpty()) optionList.add(it)
-        }
-
-        caffeine.value.let {
-            if (it.isNotEmpty()) optionList.add(it)
-        }
-
-        iceQuantity.value.let {
-            if (it.isNotEmpty()) optionList.add(it)
-        }
-
+        temperature.getName()?.let { optionList.add(it) }
+        caffeine.getName()?.let { optionList.add(it) }
+        iceQuantity.getName()?.let { optionList.add(it) }
         return optionList.joinToString("/")
     }
 
