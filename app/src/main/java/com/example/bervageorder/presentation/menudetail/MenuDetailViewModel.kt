@@ -25,7 +25,7 @@ import javax.inject.Inject
 class MenuDetailViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val getMenuUseCase: GetMenuUseCase,
-    private val postOptionListUseCase: PostOptionListUseCase
+    private val postOptionListUseCase: PostOptionListUseCase,
 ) : ViewModel() {
 
     private val _uiState: MutableStateFlow<MenuDetailUiState> =
@@ -50,7 +50,7 @@ class MenuDetailViewModel @Inject constructor(
         viewModelScope.launch {
             getMenuUseCase.getMenuById(menuId = menuId)
                 .onSuccess { menu ->
-                    Timber.d("getCurrentMenu() result :: ${menu}")
+                    Timber.d("getCurrentMenu() result :: $menu")
                     _uiState.update {
                         MenuDetailUiState.Success(menu = menu)
                     }
@@ -62,7 +62,7 @@ class MenuDetailViewModel @Inject constructor(
                             it.copy(
                                 id = menu.id,
                                 price = menu.price,
-                                name = menu.name
+                                name = menu.name,
                             )
                         }
                     }

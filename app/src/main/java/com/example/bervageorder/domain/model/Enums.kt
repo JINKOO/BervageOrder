@@ -3,9 +3,10 @@ package com.example.bervageorder.domain.model
 enum class Temperature {
     ICE,
     HOT,
-    NONE;
+    NONE,
+    ;
 
-    fun getName(): String? = when(this) {
+    fun getName(): String? = when (this) {
         ICE -> "아이스"
         HOT -> "뜨겁게"
         else -> null
@@ -15,9 +16,10 @@ enum class Temperature {
 enum class Caffeine {
     CAFFEINE,
     DE_CAFFEINE,
-    NONE;
+    NONE,
+    ;
 
-    fun getName(): String? = when(this) {
+    fun getName(): String? = when (this) {
         CAFFEINE -> "카페인"
         DE_CAFFEINE -> "디카페인"
         else -> null
@@ -28,9 +30,10 @@ enum class IceQuantity {
     LESS,
     NORMAL,
     MORE,
-    NONE;
+    NONE,
+    ;
 
-    fun getName(): String? = when(this) {
+    fun getName(): String? = when (this) {
         LESS -> "적게"
         NORMAL -> "보통"
         MORE -> "많이"

@@ -31,8 +31,8 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.bervageorder.R
-import com.example.bervageorder.domain.model.OrderMenuOption
 import com.example.bervageorder.domain.model.OptionTypeSealed
+import com.example.bervageorder.domain.model.OrderMenuOption
 import com.example.bervageorder.presentation.common.error.ErrorScreen
 import com.example.bervageorder.presentation.common.loading.LoadingScreen
 import com.example.bervageorder.presentation.common.topbar.BeverageOrderTopAppBar
@@ -40,7 +40,6 @@ import com.example.bervageorder.presentation.common.topbar.BeverageOrderTopAppBa
 import com.example.bervageorder.presentation.menudetail.state.MenuDetailScreen
 import com.example.bervageorder.presentation.menudetail.state.MenuOptionState
 import com.example.bervageorder.presentation.menudetail.state.getOptionStringResId
-import timber.log.Timber
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -48,7 +47,7 @@ fun MenuDetailMainScreen(
     modifier: Modifier = Modifier,
     viewModel: MenuDetailViewModel = hiltViewModel(),
     navigateUp: () -> Unit,
-    navigateToOrder: (String) -> Unit
+    navigateToOrder: (String) -> Unit,
 ) {
     val uiState: MenuDetailUiState by viewModel.uiState.collectAsStateWithLifecycle()
     val orderMenuOption: OrderMenuOption by viewModel.orderMenuOption.collectAsStateWithLifecycle()
@@ -59,7 +58,7 @@ fun MenuDetailMainScreen(
                 navigateUp = {
                     navigateUp()
                     viewModel.clearOption()
-                }
+                },
             )
         },
     ) { paddingValues ->
@@ -67,9 +66,12 @@ fun MenuDetailMainScreen(
         //  ViewModel에서 처리하는게 맞는 건지, Composable에서 remeber변수를 사용한 상태값으로 처리해도 되는지,
         // 답변 :: 이 부분은 이번 과제에서 Modeling을 통해 진행 , 결론은 없어도 됨, Menu Model에서 Ice옵션이 있는지에 대한 로직, OrderModel에서 선택했는지에 대한 로직과 조합해서 보여주면 됨
         var isShowIceQuantityOption by rememberSaveable { mutableStateOf(false) }
-        when(uiState) {
+        when (uiState) {
             is MenuDetailUiState.None -> Unit
-            is MenuDetailUiState.Loading -> { LoadingScreen() }
+            is MenuDetailUiState.Loading -> {
+                LoadingScreen()
+            }
+
             is MenuDetailUiState.Success -> {
                 MenuDetailScreen(
                     modifier = modifier.padding(paddingValues = paddingValues),
@@ -77,11 +79,17 @@ fun MenuDetailMainScreen(
                     orderMenuOption = orderMenuOption,
                     onClickOption = { option -> viewModel.addOption(option) },
                     onClickIceOption = { isShowIceQuantityOption = it },
-                    onClickNext = { viewModel.postMenuOptions() }
+                    onClickNext = { viewModel.postMenuOptions() },
                 )
             }
-            is MenuDetailUiState.AllOptionSelected -> { navigateToOrder(viewModel.menuId) }
-            is MenuDetailUiState.Error -> { ErrorScreen(errorState = (uiState as MenuDetailUiState.Error))}
+
+            is MenuDetailUiState.AllOptionSelected -> {
+                navigateToOrder(viewModel.menuId)
+            }
+
+            is MenuDetailUiState.Error -> {
+                ErrorScreen(errorState = (uiState as MenuDetailUiState.Error))
+            }
         }
     }
 }
@@ -90,19 +98,19 @@ fun MenuDetailMainScreen(
 fun HeaderTitle(
     modifier: Modifier = Modifier,
     name: String,
-    price: String
+    price: String,
 ) {
     Column(
         modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(8.dp)
+        verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         Text(
             text = name,
-            style = MaterialTheme.typography.bodyLarge
+            style = MaterialTheme.typography.bodyLarge,
         )
         Text(
             text = price,
-            style = MaterialTheme.typography.headlineMedium
+            style = MaterialTheme.typography.headlineMedium,
         )
     }
 }
@@ -111,15 +119,15 @@ fun HeaderTitle(
 fun IceOptionRow(
     modifier: Modifier = Modifier,
     onClickIceOption: (Boolean) -> Unit,
-    onClickOption: (OptionTypeSealed) -> Unit
+    onClickOption: (OptionTypeSealed) -> Unit,
 ) {
     Column(
         modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(8.dp)
+        verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         Text(
             text = stringResource(R.string.title_default_option),
-            style = MaterialTheme.typography.headlineMedium
+            style = MaterialTheme.typography.headlineMedium,
         )
         OptionButtonRow(
             optionList = MenuOptionState.getDefaultOptionList(),
@@ -130,7 +138,7 @@ fun IceOptionRow(
                     onClickIceOption(false)
                 }
                 onClickOption(it)
-            }
+            },
         )
     }
 }
@@ -138,19 +146,19 @@ fun IceOptionRow(
 @Composable
 fun CaffeineOptionRow(
     modifier: Modifier = Modifier,
-    onClickOption: (OptionTypeSealed) -> Unit
+    onClickOption: (OptionTypeSealed) -> Unit,
 ) {
     Column(
         modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(8.dp)
+        verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         Text(
             text = stringResource(R.string.title_decaffeine_option),
-            style = MaterialTheme.typography.headlineMedium
+            style = MaterialTheme.typography.headlineMedium,
         )
         OptionButtonRow(
             optionList = MenuOptionState.getCaffeineOptionList(),
-            onClickOption = { onClickOption(it) }
+            onClickOption = { onClickOption(it) },
         )
     }
 }
@@ -158,19 +166,19 @@ fun CaffeineOptionRow(
 @Composable
 fun IceQuantityOptionRow(
     modifier: Modifier = Modifier,
-    onClickOption: (OptionTypeSealed) -> Unit
+    onClickOption: (OptionTypeSealed) -> Unit,
 ) {
     Column(
         modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(8.dp)
+        verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         Text(
             text = stringResource(R.string.title_ice_option),
-            style = MaterialTheme.typography.headlineMedium
+            style = MaterialTheme.typography.headlineMedium,
         )
         OptionButtonRow(
             optionList = MenuOptionState.getIceQuantityOptionList(),
-            onClickOption = { onClickOption(it) }
+            onClickOption = { onClickOption(it) },
         )
     }
 }
@@ -179,7 +187,7 @@ fun IceQuantityOptionRow(
 fun OptionButtonRow(
     modifier: Modifier = Modifier,
     optionList: List<MenuOptionState> = emptyList(),
-    onClickOption: (OptionTypeSealed) -> Unit
+    onClickOption: (OptionTypeSealed) -> Unit,
 ) {
     var selectedOption by remember { mutableStateOf<MenuOptionState?>(null) }
     Column {
@@ -187,7 +195,7 @@ fun OptionButtonRow(
             modifier = modifier
                 .fillMaxWidth()
                 .selectableGroup(),
-            horizontalArrangement = Arrangement.spacedBy(4.dp)
+            horizontalArrangement = Arrangement.spacedBy(4.dp),
         ) {
             optionList.forEach { option ->
                 val isSelected = selectedOption == option
@@ -199,11 +207,13 @@ fun OptionButtonRow(
                             onClick = {
                                 selectedOption = option
                                 onClickOption(option.type)
-                            }
+                            },
                         ),
                     selectedOption = option,
-                    textColor =  selectedOption?.let { if (isSelected) it.selectedTextColor else it.unSelectedTextColor } ?: Color.Black,
-                    backgroundColor = selectedOption?.let { if (isSelected) it.selectedBackGroundColor else it.unSelectedBackGroundColor } ?: Color.LightGray
+                    textColor = selectedOption?.let { if (isSelected) it.selectedTextColor else it.unSelectedTextColor }
+                        ?: Color.Black,
+                    backgroundColor = selectedOption?.let { if (isSelected) it.selectedBackGroundColor else it.unSelectedBackGroundColor }
+                        ?: Color.LightGray,
                 )
             }
         }
@@ -215,19 +225,19 @@ fun TwoOptionItem(
     modifier: Modifier = Modifier,
     selectedOption: MenuOptionState,
     @ColorRes textColor: Color,
-    @ColorRes backgroundColor: Color
+    @ColorRes backgroundColor: Color,
 ) {
     Box(
         modifier = modifier
             .height(32.dp)
             .clip(RoundedCornerShape(24.dp))
             .background(backgroundColor),
-        contentAlignment = Alignment.Center
+        contentAlignment = Alignment.Center,
     ) {
         Text(
             text = stringResource(id = selectedOption.getOptionStringResId()),
             style = MaterialTheme.typography.bodyLarge,
-            color = textColor
+            color = textColor,
         )
     }
 }

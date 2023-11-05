@@ -6,21 +6,21 @@ import com.example.bervageorder.data.entity.TemperatureType
 import java.text.DecimalFormat
 
 data class Menu(
-    val id: String = "",
+    val id: String,
     val type: MenuType = MenuType.NONE, // 메뉴에 type이 정말 필요한지 파악 해보기
     val name: String = "",
     val temperature: TemperatureType = TemperatureType.NONE,
-    val price: Int = 0,
-    val isCaffeine: Boolean = false
+    val price: Price = Price(0),
+    val isCaffeine: Boolean = false,
 ) {
     val isDefaultOption: Boolean
-        get() = when(temperature) {
+        get() = when (temperature) {
             TemperatureType.ICE, TemperatureType.HOT, TemperatureType.BOTH -> true
             else -> false
         }
 
     val isIceQuantity: Boolean
-        get() = when(type) {
+        get() = when (type) {
             MenuType.COFFEE, MenuType.ADE -> true
             else -> false
         }
@@ -39,8 +39,8 @@ data class Menu(
                 type = menuEntity.type ?: MenuType.NONE,
                 name = menuEntity.name.orEmpty(),
                 temperature = menuEntity.temperature ?: TemperatureType.NONE,
-                price = menuEntity.price ?: 0,
-                isCaffeine = menuEntity.isCaffeine ?: false
+                price = Price(menuEntity.price ?: 0),
+                isCaffeine = menuEntity.isCaffeine ?: false,
             )
         }
     }

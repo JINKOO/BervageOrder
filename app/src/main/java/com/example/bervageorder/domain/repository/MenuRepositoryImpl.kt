@@ -31,8 +31,9 @@ class MenuRepositoryImpl @Inject constructor() : MenuRepository {
 
     override val menuList: MutableList<Menu> = mutableListOf()
 
-    private val _menuOptionStateFlow: MutableStateFlow<OrderMenuOption> = MutableStateFlow(OrderMenuOption())
-    override val orderMenuFlow = _menuOptionStateFlow.asStateFlow()
+    private val _orderMenuFlow: MutableStateFlow<OrderMenuOption> =
+        MutableStateFlow(OrderMenuOption())
+    override val orderMenuFlow = _orderMenuFlow.asStateFlow()
 
     // TODO 2회차 질문 :: Repository에서 Entity -> Model로 변경 방식이 맞는지? runCatching의 올바르게 사용했는지..??
     private suspend fun getFakeMenuList(): List<MenuEntity> =
@@ -44,7 +45,7 @@ class MenuRepositoryImpl @Inject constructor() : MenuRepository {
                     name = "아메리카노",
                     temperature = TemperatureType.BOTH,
                     price = 1_000,
-                    isCaffeine = true
+                    isCaffeine = true,
                 ),
                 MenuEntity(
                     id = createMenuId(),
@@ -52,7 +53,7 @@ class MenuRepositoryImpl @Inject constructor() : MenuRepository {
                     name = "카페라떼",
                     temperature = TemperatureType.BOTH,
                     price = 1_500,
-                    isCaffeine = true
+                    isCaffeine = true,
                 ),
                 MenuEntity(
                     id = createMenuId(),
@@ -60,7 +61,7 @@ class MenuRepositoryImpl @Inject constructor() : MenuRepository {
                     name = "카푸치노",
                     temperature = TemperatureType.BOTH,
                     price = 2_000,
-                    isCaffeine = true
+                    isCaffeine = true,
                 ),
                 MenuEntity(
                     id = createMenuId(),
@@ -68,7 +69,7 @@ class MenuRepositoryImpl @Inject constructor() : MenuRepository {
                     name = "오렌지에이드",
                     temperature = TemperatureType.ICE,
                     price = 2_500,
-                    isCaffeine = false
+                    isCaffeine = false,
                 ),
                 MenuEntity(
                     id = createMenuId(),
@@ -76,7 +77,7 @@ class MenuRepositoryImpl @Inject constructor() : MenuRepository {
                     name = "망고에이드",
                     temperature = TemperatureType.ICE,
                     price = 2_500,
-                    isCaffeine = false
+                    isCaffeine = false,
                 ),
                 MenuEntity(
                     id = createMenuId(),
@@ -84,7 +85,7 @@ class MenuRepositoryImpl @Inject constructor() : MenuRepository {
                     name = "얼그레이티",
                     temperature = TemperatureType.HOT,
                     price = 1_000,
-                    isCaffeine = true
+                    isCaffeine = true,
                 ),
                 MenuEntity(
                     id = createMenuId(),
@@ -92,7 +93,7 @@ class MenuRepositoryImpl @Inject constructor() : MenuRepository {
                     name = "페퍼민트티",
                     temperature = TemperatureType.HOT,
                     price = 2_500,
-                    isCaffeine = true
+                    isCaffeine = true,
                 ),
                 MenuEntity(
                     id = createMenuId(),
@@ -100,7 +101,7 @@ class MenuRepositoryImpl @Inject constructor() : MenuRepository {
                     name = "치즈케이크",
                     temperature = TemperatureType.NONE,
                     price = 3_000,
-                    isCaffeine = false
+                    isCaffeine = false,
                 ),
                 MenuEntity(
                     id = createMenuId(),
@@ -108,7 +109,7 @@ class MenuRepositoryImpl @Inject constructor() : MenuRepository {
                     name = "초코케이크",
                     temperature = TemperatureType.NONE,
                     price = 3_000,
-                    isCaffeine = false
+                    isCaffeine = false,
                 ),
                 MenuEntity(
                     id = createMenuId(),
@@ -116,7 +117,7 @@ class MenuRepositoryImpl @Inject constructor() : MenuRepository {
                     name = "마들렌",
                     temperature = TemperatureType.NONE,
                     price = 1_000,
-                    isCaffeine = false
+                    isCaffeine = false,
                 ),
                 MenuEntity(
                     id = createMenuId(),
@@ -124,8 +125,8 @@ class MenuRepositoryImpl @Inject constructor() : MenuRepository {
                     name = "휘낭시에",
                     temperature = TemperatureType.NONE,
                     price = 1_500,
-                    isCaffeine = false
-                )
+                    isCaffeine = false,
+                ),
             )
         }
 
@@ -138,34 +139,34 @@ class MenuRepositoryImpl @Inject constructor() : MenuRepository {
      *  map은 성공시에만 수행되기 때문.
      */
     override suspend fun getMenuList(): Result<List<Menu>> = runCatching {
-            getFakeMenuList().map { Menu(it) }
-        }.onSuccess {
-            Timber.d("getMenuList() SUCCESS :: ${menuList.size}")
-            it.forEach { menu -> menuList.add(menu) }
-        }.onFailure {
-            Timber.w("getMenuList() ERROR :: ${it.message}")
-        }
+        getFakeMenuList().map { Menu(it) }
+    }.onSuccess {
+        Timber.d("getMenuList() SUCCESS :: ${menuList.size}")
+        it.forEach { menu -> menuList.add(menu) }
+    }.onFailure {
+        Timber.w("getMenuList() ERROR :: ${it.message}")
+    }
 
     override suspend fun getMenuById(menuId: String): Result<Menu?> = runCatching {
-        Timber.d("getMenuById() menuList :: ${menuList}")
+        Timber.d("getMenuById() menuList :: $menuList")
         // TODO 2회차 질문 :: find는 해당 조건에 없다면 null을 반환하는데, 이때, Null 처리를 어떻게 하면 되는지? Null인 경우, 빈 객체로 정의?
         // 답변 : 이 경우에는 null 반환하는 것이 맞다. 조건에 있는 값이 없다는 의미이니깐
         menuList.find { it.id == menuId }
     }.onSuccess {
-        Timber.d("getMenuById() SUCCESS :: ${it}")
+        Timber.d("getMenuById() SUCCESS :: $it")
     }.onFailure {
         Timber.w("getMenuById() ERROR :: ${it.message}")
     }
 
     override suspend fun postOptionList(orderMenuOption: OrderMenuOption) = kotlin.runCatching {
-        _menuOptionStateFlow.update {
+        _orderMenuFlow.update {
             it.copy(
                 id = orderMenuOption.id,
                 name = orderMenuOption.name,
                 price = orderMenuOption.price,
                 temperature = orderMenuOption.temperature,
                 caffeine = orderMenuOption.caffeine,
-                iceQuantity = orderMenuOption.iceQuantity
+                iceQuantity = orderMenuOption.iceQuantity,
             )
         }
     }.onSuccess {
