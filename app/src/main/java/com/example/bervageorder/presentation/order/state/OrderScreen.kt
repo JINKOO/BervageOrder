@@ -1,4 +1,4 @@
-package com.example.bervageorder.presentation.order
+package com.example.bervageorder.presentation.order.state
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -13,20 +13,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.bervageorder.domain.model.Menu
+import com.example.bervageorder.domain.model.OrderMenuOption
 import com.example.bervageorder.presentation.common.button.BottomButton
 import com.example.bervageorder.presentation.common.button.BottomButtonState
-
+import com.example.bervageorder.presentation.common.button.CloseBottomButton
 
 @Composable
 fun OrderScreen(
     modifier: Modifier = Modifier,
-    menu: Menu?,
-    optionList: String,
+    orderMenuOption: OrderMenuOption,
     navigateToIntro: () -> Unit
 ) {
     // TODO 2회차 질문 :: 23번째 줄에서 Menu를 Nullable로 받는데, Composable내에서 29번째 처럼 처리해도 되는지?
     //  아니면 애초에 Domain에서 Model을 넘길때, NonNull타입으로 넘겨야하는지?
-    if (menu == null) return
     Column(
         modifier = modifier
             .padding(horizontal = 16.dp, vertical = 32.dp)
@@ -43,24 +42,23 @@ fun OrderScreen(
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 Text(
-                    text = menu.name,
+                    text = orderMenuOption.name,
                     style = MaterialTheme.typography.bodyLarge
                 )
                 Text(
-                    text = optionList,
+                    text = orderMenuOption.getOptionFormatString(),
                     style = MaterialTheme.typography.bodyLarge
                 )
             }
 
             Text(
-                text = menu.priceFormatString,
+                text = orderMenuOption.getPriceFormatString(),
                 style = MaterialTheme.typography.headlineMedium
             )
         }
 
-        BottomButton(
-            bottomButtonState = BottomButtonState.Close,
-            onClick = navigateToIntro
-        )
+        CloseBottomButton {
+            navigateToIntro()
+        }
     }
 }

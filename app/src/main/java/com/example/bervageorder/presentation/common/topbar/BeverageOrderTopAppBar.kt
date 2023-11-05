@@ -18,20 +18,23 @@ fun BeverageOrderTopAppBar(
     state: BeverageOrderTopAppBarState,
     navigateUp: () -> Unit
 ) {
-    if (state.titleId == null) return
-    TopAppBar(
-        title = {
-            Text(
-                text = stringResource(state.getTitleId())
-            )
-        },
-        navigationIcon = {
-            IconButton(onClick = { navigateUp() }) {
-                Icon(
-                    imageVector = Icons.Filled.ArrowBack,
-                    contentDescription = null
+    // 비즈니스 모델을 State에서 로직 isDisplay()
+    // 안그리겠다는 것도 그리는 것. (조기 탈출) 판단은 isDisplay
+    if (state.isDisplay()) {
+        TopAppBar(
+            title = {
+                Text(
+                    text = stringResource(state.getTitleId())
                 )
+            },
+            navigationIcon = {
+                IconButton(onClick = { navigateUp() }) {
+                    Icon(
+                        imageVector = Icons.Filled.ArrowBack,
+                        contentDescription = null
+                    )
+                }
             }
-        }
-    )
+        )
+    }
 }

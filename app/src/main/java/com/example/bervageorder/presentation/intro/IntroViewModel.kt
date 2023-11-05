@@ -2,7 +2,6 @@ package com.example.bervageorder.presentation.intro
 
 import androidx.lifecycle.ViewModel
 import com.example.bervageorder.R
-import com.example.bervageorder.presentation.intro.state.IntroUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

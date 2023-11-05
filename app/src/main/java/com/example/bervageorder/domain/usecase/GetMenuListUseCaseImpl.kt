@@ -12,7 +12,7 @@ class GetMenuListUseCaseImpl @Inject constructor(
         return menuRepository.getMenuList()
     }
 
-    override suspend fun getMenuListFlow(): Flow<List<Menu>> {
+    override fun getMenuListFlow(): Flow<List<Menu>> {
         return menuRepository.menuListFlow
     }
 }

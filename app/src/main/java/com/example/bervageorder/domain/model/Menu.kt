@@ -7,7 +7,7 @@ import java.text.DecimalFormat
 
 data class Menu(
     val id: String = "",
-    val type: MenuType = MenuType.NONE,
+    val type: MenuType = MenuType.NONE, // 메뉴에 type이 정말 필요한지 파악 해보기
     val name: String = "",
     val temperature: TemperatureType = TemperatureType.NONE,
     val price: Int = 0,
@@ -27,6 +27,9 @@ data class Menu(
 
     val priceFormatString: String
         get() = price.toDecimalFormat()
+
+    val caffeine: Caffeine
+        get() = if (isCaffeine) Caffeine.CAFFEINE else Caffeine.NONE
 
     companion object {
         operator fun invoke(menuEntity: MenuEntity): Menu {

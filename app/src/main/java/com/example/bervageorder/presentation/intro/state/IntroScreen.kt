@@ -1,4 +1,4 @@
-package com.example.bervageorder.presentation.intro
+package com.example.bervageorder.presentation.intro.state
 
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import com.example.bervageorder.R
 import com.example.bervageorder.presentation.common.button.BottomButton
 import com.example.bervageorder.presentation.common.button.BottomButtonState
+import com.example.bervageorder.presentation.common.button.NextBottomButton
 
 @Composable
 fun IntroScreen(
@@ -37,8 +38,7 @@ fun IntroScreen(
             style = MaterialTheme.typography.headlineLarge
         )
 
-        BottomButton(
-            bottomButtonState = BottomButtonState.Next,
+        NextBottomButton(
             onClick = navigateToMenuList
         )
     }

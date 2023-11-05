@@ -18,3 +18,8 @@ sealed class BeverageOrderTopAppBarState(@StringRes val titleId: Int?) {
 fun BeverageOrderTopAppBarState.getTitleId(): Int {
     return this.titleId ?: R.string.empty_string
 }
+
+@Composable
+fun BeverageOrderTopAppBarState.isDisplay(): Boolean {
+    return this !is BeverageOrderTopAppBarState.IntroTitle
+}

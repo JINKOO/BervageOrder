@@ -1,7 +1,8 @@
-package com.example.bervageorder.presentation.menudetail.state
+package com.example.bervageorder.presentation.menudetail
 
 import androidx.annotation.StringRes
 import com.example.bervageorder.domain.model.Menu
+import com.example.bervageorder.presentation.common.error.ErrorState
 
 sealed class MenuDetailUiState {
     object None: MenuDetailUiState()
@@ -14,7 +15,10 @@ sealed class MenuDetailUiState {
 
     data class Error(
         @StringRes val messageId: Int,
-    ): MenuDetailUiState()
+    ): MenuDetailUiState(), ErrorState {
+        override val errorMessageId: Int
+            get() = messageId
+    }
 
     object AllOptionSelected: MenuDetailUiState()
 }

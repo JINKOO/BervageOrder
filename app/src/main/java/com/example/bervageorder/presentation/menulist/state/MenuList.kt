@@ -1,4 +1,4 @@
-package com.example.bervageorder.presentation.menulist
+package com.example.bervageorder.presentation.menulist.state
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -16,31 +16,41 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.example.bervageorder.data.entity.MenuType
 import com.example.bervageorder.domain.model.Menu
+import com.example.bervageorder.presentation.common.error.ErrorScreen
+import com.example.bervageorder.presentation.menulist.MenuListSubUiState
+import com.example.bervageorder.presentation.menulist.MenuListUiState
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun MenuList(
     modifier: Modifier = Modifier,
-    menuGrouped: Map<MenuType, List<Menu>> = emptyMap(),
+    uiState: MenuListUiState.Success,
     navigateToOrderDetail: (String) -> Unit
 ) {
-    LazyColumn(
-        modifier = modifier
-    ) {
-        menuGrouped.forEach { (menuType, menuListByMenuType) ->
-            stickyHeader {
-                MenuHeader(
-                    menuType = menuType,
-                    color = Color.LightGray
-                )
-            }
+    when (uiState.menuListSubUiState) {
+        is MenuListSubUiState.Success -> {
+            LazyColumn(
+                modifier = modifier
+            ) {
+                uiState.menuListSubUiState.menuMap.forEach { (menuType, menuListByMenuType) ->
+                    stickyHeader {
+                        MenuHeader(
+                            menuType = menuType,
+                            color = Color.LightGray
+                        )
+                    }
 
-            items(menuListByMenuType) { menu ->
-                MenuItem(
-                    menu = menu,
-                    navigateToOrderDetail =  { navigateToOrderDetail(menu.id) }
-                )
+                    items(menuListByMenuType) { menu ->
+                        MenuItem(
+                            menu = menu,
+                            navigateToOrderDetail =  { navigateToOrderDetail(menu.id) }
+                        )
+                    }
+                }
             }
+        }
+        is MenuListSubUiState.Error -> {
+            ErrorScreen(errorState = uiState.menuListSubUiState)
         }
     }
 }

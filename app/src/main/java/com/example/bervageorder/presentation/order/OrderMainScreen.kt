@@ -12,7 +12,7 @@ import com.example.bervageorder.presentation.common.error.ErrorScreen
 import com.example.bervageorder.presentation.common.loading.LoadingScreen
 import com.example.bervageorder.presentation.common.topbar.BeverageOrderTopAppBar
 import com.example.bervageorder.presentation.common.topbar.BeverageOrderTopAppBarState
-import com.example.bervageorder.presentation.order.state.OrderUiState
+import com.example.bervageorder.presentation.order.state.OrderScreen
 import timber.log.Timber
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -36,13 +36,12 @@ fun OrderMainScreen(
         },
     ) { paddingValues ->
         when(uiState) {
-            is OrderUiState.None -> {}
+            is OrderUiState.None -> Unit
             is OrderUiState.Loading -> { LoadingScreen() }
             is OrderUiState.Success -> {
                 OrderScreen(
                     modifier = modifier.padding(paddingValues),
-                    menu = (uiState as OrderUiState.Success).menu,
-                    optionList = (uiState as OrderUiState.Success).optionListString,
+                    orderMenuOption = (uiState as OrderUiState.Success).menuOptions,
                     navigateToIntro = {
                         // TODO 질문 2회차 :: Repository에서 Dispatcher IO 수행 완료 후, 화면 이동 방법.완료되었다는 상태를 갖고, 이 상태가 true인 경우에만 navigate()
                         viewModel.clearAll()
@@ -50,7 +49,7 @@ fun OrderMainScreen(
                     }
                 )
             }
-            is OrderUiState.Error -> { ErrorScreen(messageId = (uiState as OrderUiState.Error).errorMessage)}
+            is OrderUiState.Error -> { ErrorScreen(errorState = uiState as OrderUiState.Error)}
         }
     }
 }

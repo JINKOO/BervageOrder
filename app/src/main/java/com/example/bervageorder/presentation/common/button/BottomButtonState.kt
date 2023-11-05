@@ -2,6 +2,7 @@ package com.example.bervageorder.presentation.common.button
 
 import androidx.annotation.StringRes
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
 import com.example.bervageorder.R
 
 sealed class BottomButtonState(@StringRes val stringResId: Int?) {
@@ -10,6 +11,6 @@ sealed class BottomButtonState(@StringRes val stringResId: Int?) {
 }
 
 @Composable
-fun BottomButtonState.getBottomButtonTextId(): Int {
-    return this.stringResId ?: R.string.empty_string
+fun BottomButtonState.getBottomButtonText(): String {
+    return stringResource(id = this.stringResId ?: R.string.empty_string)
 }
