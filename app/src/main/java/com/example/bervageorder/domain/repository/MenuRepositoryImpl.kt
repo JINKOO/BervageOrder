@@ -31,6 +31,18 @@ class MenuRepositoryImpl @Inject constructor() : MenuRepository {
 
     override val menuList: MutableList<Menu> = mutableListOf()
 
+    /**
+     *  StateFlow : 속안에 값이 있따. 가지고 있는 값과 비교를 해준다. 상태를 비교 (똑같은 같을 비교하면) 가장 최근값
+     *   원래는 Observer, 중복 안됨 (마지막 상태 저장)
+     *
+     *  Shared Flow : 속안에 값이 없다. 구독자 Count가 있다. 리스트로 값을 가지고 있따.
+     *  replayCache == 1이면 stateFlow, shareFLow 같다.
+     *  마지막 값 중복
+     *
+     *  내가 값의 변화를 어떻게 처리할건지, 중복없이 -> stateFLow,
+     *  마지막 값을 사용한느데, 중복 -> sharedFlow
+     *
+     */
     private val _menuOptionStateFlow: MutableStateFlow<OrderMenuOption> = MutableStateFlow(OrderMenuOption())
     override val orderMenuFlow = _menuOptionStateFlow.asStateFlow()
 

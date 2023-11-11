@@ -57,6 +57,7 @@ class MenuDetailViewModel @Inject constructor(
 
                     // TODO 3회차 질문 :: OrderMenuOption Model에 옵션값 제외한, 기본정보 업데이트 로직을 여기서 처리해도 되는지..??
                     //  아니면 Repository단에서 처리하는 것이 맞는지
+                    // 객체를 생성위치는 최종적으로 만들어지는 곳
                     menu?.let {
                         _orderMenuOption.update {
                             it.copy(
@@ -92,6 +93,10 @@ class MenuDetailViewModel @Inject constructor(
         }
     }
 
+    /**
+     *  여기서 Option 객체를 만든다.
+     *  사용자가 선택한 것을 만들때에는 최종적으로 만들어지는 시점에. 버튼 클릭했을 때, 객체를 만든다.
+     */
     fun postMenuOptions() {
         Timber.d("selectedOption() :: ${orderMenuOption.value}")
         viewModelScope.launch {
