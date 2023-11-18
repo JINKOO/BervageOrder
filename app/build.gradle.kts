@@ -18,7 +18,6 @@ android {
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary = true
@@ -26,16 +25,19 @@ android {
     }
 
     buildTypes {
-        getByName("debug") {
-            isDebuggable = true
-        }
-
         getByName("release") {
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            signingConfig = signingConfigs.getByName("debug")
+        }
+
+        getByName("debug") {
+            isDebuggable = true
+            applicationIdSuffix = ".debug" // applicationSuffix를 추가해야 서로다른 package명으로, debug, release별도의 앱 설치 가능
+            versionNameSuffix = "_debug"
         }
     }
     compileOptions {
