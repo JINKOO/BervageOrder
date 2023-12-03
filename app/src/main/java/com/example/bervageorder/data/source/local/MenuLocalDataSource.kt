@@ -14,11 +14,19 @@ import javax.inject.Inject
 // TODO menuList를 flow를 사용해서 한다.
 class MenuLocalDataSource @Inject constructor() {
 
+    /**
+     *  Data Stream을 사용하는 목적
+     *  1. 언어적인 특성 :: 코틀린은 return값은 1개, 이를 해결하려고, return을 시간에 따라서 여러번하려고 floW에서 여러가지 flow (Emit)
+     *  2. data stream :: data가 계속 흘러간다. reactive Prgramming
+     */
     val menuList: Flow<List<Menu>> = flow {
         val menuList = getFakeMenuList().map { Menu(it) }
         emit(menuList)
     }
 
+    /**
+     *  여기서 Flow 자체로
+     */
     private suspend fun getFakeMenuList(): List<MenuEntity> =
         withContext(Dispatchers.Default) {
             mutableListOf(

@@ -12,11 +12,9 @@ import timber.log.Timber
  *   - 복잡한 경우 : project구조에서 Application 클래스를 release, debug로 따로 만든다.
  */
 @HiltAndroidApp
-class BeverageOrderApplication : Application() {
+open class BeverageOrderApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
-
-        Timber.plant(Timber.DebugTree())
     }
 }

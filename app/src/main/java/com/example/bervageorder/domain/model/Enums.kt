@@ -1,5 +1,8 @@
 package com.example.bervageorder.domain.model
 
+/**
+ *  위치가 data로 올라가여함
+ */
 enum class Temperature {
     ICE,
     HOT,
