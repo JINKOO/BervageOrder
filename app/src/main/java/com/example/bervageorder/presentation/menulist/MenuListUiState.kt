@@ -10,25 +10,27 @@ sealed class MenuListUiState {
 
     object Loading : MenuListUiState()
 
+    // TODO : JA-12314 : 2021/11/15
     data class Error(
-        @StringRes val errorMessage: Int
+        @StringRes val errorMessage: Int,
+        val dialog: () -> Unit,
     ) : MenuListUiState(), ErrorState {
         override val errorMessageId: Int
             get() = errorMessage
     }
 
     data class Success(
-        val menuListSubUiState: MenuListSubUiState
+        val menuListSubUiState: MenuListSubUiState,
     ) : MenuListUiState()
 }
 
-sealed class MenuListSubUiState{
+sealed class MenuListSubUiState {
     data class Success(
-        val menuMap: Map<MenuType, List<Menu>> = emptyMap()
-    ): MenuListSubUiState()
+        val menuMap: Map<MenuType, List<Menu>> = emptyMap(),
+    ) : MenuListSubUiState()
 
     data class Error(
-        @StringRes val errorMessage: Int
+        @StringRes val errorMessage: Int,
     ) : MenuListSubUiState(), ErrorState {
         override val errorMessageId: Int
             get() = errorMessage

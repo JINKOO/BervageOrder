@@ -3,6 +3,7 @@ package com.example.bervageorder
 import android.app.Application
 import dagger.hilt.android.HiltAndroidApp
 import timber.log.Timber
+import javax.inject.Inject
 
 // Application 구분해서 작성 / 새로운 디렉토리 만들어사 debug / release 요줌에는 initializer
 // OR Initializer
@@ -14,7 +15,12 @@ import timber.log.Timber
 @HiltAndroidApp
 open class BeverageOrderApplication : Application() {
 
+    @Inject
+    lateinit var timberTree: Timber.Tree
+
     override fun onCreate() {
         super.onCreate()
+        Timber.plant(timberTree)
+        Timber.d("BeverageOrderApplicationDebug() :: Logger")
     }
 }

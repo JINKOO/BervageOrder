@@ -4,6 +4,7 @@ import com.example.bervageorder.data.entity.MenuEntity
 import com.example.bervageorder.data.entity.MenuType
 import com.example.bervageorder.data.entity.TemperatureType
 import com.example.bervageorder.data.repository.MenuRepository
+import com.example.bervageorder.data.source.local.MenuLocalDataSource
 import com.example.bervageorder.domain.model.Menu
 import com.example.bervageorder.domain.model.OrderMenuOption
 import kotlinx.coroutines.Dispatchers
@@ -11,6 +12,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.withContext
 import timber.log.Timber
@@ -19,7 +21,10 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class MenuRepositoryImpl @Inject constructor() : MenuRepository {
+class MenuRepositoryImpl @Inject constructor(
+    private val localDataSource: MenuLocalDataSource, // -> Entity -> Model (Data)
+    // private val remoteDataSource: MenuRemoteDataSource, // -> Response -> Model(Data)
+) : MenuRepository {
 
     // TODO 2회차 질문 :: menuList에 대한 것을 Flow로 전달할 때, Flow<Result<List<Menu>>>로 전달해야하는지? 아니면, Collect하는 쪽에서
     //  Catch 중간 연산자를 사용해서 Error인 경우를 처리해야하는지
@@ -43,7 +48,8 @@ class MenuRepositoryImpl @Inject constructor() : MenuRepository {
      *  마지막 값을 사용한느데, 중복 -> sharedFlow
      *
      */
-    private val _menuOptionStateFlow: MutableStateFlow<OrderMenuOption> = MutableStateFlow(OrderMenuOption())
+    private val _menuOptionStateFlow: MutableStateFlow<OrderMenuOption> =
+        MutableStateFlow(OrderMenuOption())
     override val orderMenuFlow = _menuOptionStateFlow.asStateFlow()
 
     // TODO 2회차 질문 :: Repository에서 Entity -> Model로 변경 방식이 맞는지? runCatching의 올바르게 사용했는지..??
@@ -56,7 +62,7 @@ class MenuRepositoryImpl @Inject constructor() : MenuRepository {
                     name = "아메리카노",
                     temperature = TemperatureType.BOTH,
                     price = 1_000,
-                    isCaffeine = true
+                    isCaffeine = true,
                 ),
                 MenuEntity(
                     id = createMenuId(),
@@ -64,7 +70,7 @@ class MenuRepositoryImpl @Inject constructor() : MenuRepository {
                     name = "카페라떼",
                     temperature = TemperatureType.BOTH,
                     price = 1_500,
-                    isCaffeine = true
+                    isCaffeine = true,
                 ),
                 MenuEntity(
                     id = createMenuId(),
@@ -72,7 +78,7 @@ class MenuRepositoryImpl @Inject constructor() : MenuRepository {
                     name = "카푸치노",
                     temperature = TemperatureType.BOTH,
                     price = 2_000,
-                    isCaffeine = true
+                    isCaffeine = true,
                 ),
                 MenuEntity(
                     id = createMenuId(),
@@ -80,7 +86,7 @@ class MenuRepositoryImpl @Inject constructor() : MenuRepository {
                     name = "오렌지에이드",
                     temperature = TemperatureType.ICE,
                     price = 2_500,
-                    isCaffeine = false
+                    isCaffeine = false,
                 ),
                 MenuEntity(
                     id = createMenuId(),
@@ -88,7 +94,7 @@ class MenuRepositoryImpl @Inject constructor() : MenuRepository {
                     name = "망고에이드",
                     temperature = TemperatureType.ICE,
                     price = 2_500,
-                    isCaffeine = false
+                    isCaffeine = false,
                 ),
                 MenuEntity(
                     id = createMenuId(),
@@ -96,7 +102,7 @@ class MenuRepositoryImpl @Inject constructor() : MenuRepository {
                     name = "얼그레이티",
                     temperature = TemperatureType.HOT,
                     price = 1_000,
-                    isCaffeine = true
+                    isCaffeine = true,
                 ),
                 MenuEntity(
                     id = createMenuId(),
@@ -104,7 +110,7 @@ class MenuRepositoryImpl @Inject constructor() : MenuRepository {
                     name = "페퍼민트티",
                     temperature = TemperatureType.HOT,
                     price = 2_500,
-                    isCaffeine = true
+                    isCaffeine = true,
                 ),
                 MenuEntity(
                     id = createMenuId(),
@@ -112,7 +118,7 @@ class MenuRepositoryImpl @Inject constructor() : MenuRepository {
                     name = "치즈케이크",
                     temperature = TemperatureType.NONE,
                     price = 3_000,
-                    isCaffeine = false
+                    isCaffeine = false,
                 ),
                 MenuEntity(
                     id = createMenuId(),
@@ -120,7 +126,7 @@ class MenuRepositoryImpl @Inject constructor() : MenuRepository {
                     name = "초코케이크",
                     temperature = TemperatureType.NONE,
                     price = 3_000,
-                    isCaffeine = false
+                    isCaffeine = false,
                 ),
                 MenuEntity(
                     id = createMenuId(),
@@ -128,7 +134,7 @@ class MenuRepositoryImpl @Inject constructor() : MenuRepository {
                     name = "마들렌",
                     temperature = TemperatureType.NONE,
                     price = 1_000,
-                    isCaffeine = false
+                    isCaffeine = false,
                 ),
                 MenuEntity(
                     id = createMenuId(),
@@ -136,8 +142,8 @@ class MenuRepositoryImpl @Inject constructor() : MenuRepository {
                     name = "휘낭시에",
                     temperature = TemperatureType.NONE,
                     price = 1_500,
-                    isCaffeine = false
-                )
+                    isCaffeine = false,
+                ),
             )
         }
 
@@ -149,22 +155,26 @@ class MenuRepositoryImpl @Inject constructor() : MenuRepository {
      *  아니면 중간에 map을 사용하면 됨
      *  map은 성공시에만 수행되기 때문.
      */
-    override suspend fun getMenuList(): Result<List<Menu>> = runCatching {
-            getFakeMenuList().map { Menu(it) }
-        }.onSuccess {
-            Timber.d("getMenuList() SUCCESS :: ${menuList.size}")
-            it.forEach { menu -> menuList.add(menu) }
-        }.onFailure {
-            Timber.w("getMenuList() ERROR :: ${it.message}")
+    override suspend fun getMenuList(): Result<Flow<List<Menu>>> = runCatching {
+        localDataSource.menuList.map { list ->
+            list.map { entity ->
+                Menu(entity)
+            }
         }
+    }.onSuccess {
+        Timber.d("getMenuList() SUCCESS :: ${menuList.size}")
+        // it.forEach { menu -> menuList.add(menu) }
+    }.onFailure {
+        Timber.w("getMenuList() ERROR :: ${it.message}")
+    }
 
     override suspend fun getMenuById(menuId: String): Result<Menu?> = runCatching {
-        Timber.d("getMenuById() menuList :: ${menuList}")
+        Timber.d("getMenuById() menuList :: $menuList")
         // TODO 2회차 질문 :: find는 해당 조건에 없다면 null을 반환하는데, 이때, Null 처리를 어떻게 하면 되는지? Null인 경우, 빈 객체로 정의?
         // 답변 : 이 경우에는 null 반환하는 것이 맞다. 조건에 있는 값이 없다는 의미이니깐
         menuList.find { it.id == menuId }
     }.onSuccess {
-        Timber.d("getMenuById() SUCCESS :: ${it}")
+        Timber.d("getMenuById() SUCCESS :: $it")
     }.onFailure {
         Timber.w("getMenuById() ERROR :: ${it.message}")
     }
@@ -177,7 +187,7 @@ class MenuRepositoryImpl @Inject constructor() : MenuRepository {
                 price = orderMenuOption.price,
                 temperature = orderMenuOption.temperature,
                 caffeine = orderMenuOption.caffeine,
-                iceQuantity = orderMenuOption.iceQuantity
+                iceQuantity = orderMenuOption.iceQuantity,
             )
         }
     }.onSuccess {

@@ -6,7 +6,7 @@ class BeverageOrderApplicationDebug : BeverageOrderApplication() {
 
     override fun onCreate() {
         super.onCreate()
-        Timber.plant(Timber.DebugTree())
+        Timber.plant(timberTree)
         Timber.d("BeverageOrderApplicationDebug() :: Logger")
     }
 }

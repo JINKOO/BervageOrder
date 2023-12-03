@@ -12,4 +12,4 @@ annotation class UserAgentInterceptor
 
 @Retention(AnnotationRetention.BINARY)
 @Qualifier
-annotation class UserTokenInterceptor
+annotation class UserTokenInterceptor 
