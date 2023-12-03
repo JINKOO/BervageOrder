@@ -51,6 +51,7 @@ object NetworkModule {
     }
 
     // 2. OkHttpLoggerInterceptor 생성
+    // TODO Debug인 경우에는 Body / Release인 경우에는 NONE
     @Provides
     @OkHttpLoggingInterceptor
     fun provideOkHttpLoggingInterceptor(): Interceptor {
